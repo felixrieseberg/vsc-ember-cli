@@ -1,0 +1,62 @@
+{
+  "name": "vsc-ember-cli",
+  "displayName": "Ember Cli in Visual Studio Code",
+  "description": "Turn Visual Studio Code into a Ember Cli IDE",
+  "version": "0.0.1",
+  "publisher": "felixrieseberg",
+  "engines": {
+    "vscode": "^0.10.0"
+  },
+  "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "Travis",
+    "Travis CI",
+    "Build Status",
+    "CI"
+  ],
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#A1A0A0",
+    "theme": "light"
+  },
+  "activationEvents": [
+    "onCommand:extension.updateTravis",
+    "onCommand:extension.openInTravis",
+    "workspaceContains:.travis.yml"
+  ],
+  "bugs": {
+    "url": "https://github.com/felixrieseberg/vsc-ember-cli/issues"
+  },
+  "homepage": "https://github.com/felixrieseberg/vsc-ember-cli/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixrieseberg/vsc-ember-cli.git"
+  },
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.setupProject",
+        "title": "Ember: Setup Project"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc && node ./node_modules/vscode/bin/compile",
+    "compile": "tsc && node ./node_modules/vscode/bin/compile -watch -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^1.6.2",
+    "vscode": "next"
+  },
+  "dependencies": {
+    "ini": "^1.3.4",
+    "merge": "^1.2.0",
+    "open": "0.0.5",
+    "path-exists": "^2.1.0",
+    "travis-ci": "^2.0.3"
+  }
+}
