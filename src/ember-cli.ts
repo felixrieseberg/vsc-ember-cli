@@ -1,17 +1,36 @@
 import {window, commands, workspace} from 'vscode';
-import fileops = require('./fileops');
 import constants = require('./constants');
+import fileOps = require('./file-ops');
+import emberOps = require('./ember-ops');
 
-// Generic imports
-var pathExists = require('path-exists');
+// Let's keep some references around
+var serveOp : emberOps.EmberOperation;
 
 // Set the project up
 export function setupProject() : boolean {
 	if (!workspace || !workspace.rootPath) return false;
 	
-	fileops.appendVSCIgnore(constants.ignoreItems);
-	fileops.appendJSConfig(constants.jsConfig);
+	fileOps.appendVSCIgnore(constants.ignoreItems);
+	fileOps.appendJSConfig(constants.jsConfig);
 }
+
+// ember build
+export function build() {
+	let buildOp = new emberOps.EmberOperation('build');
+}
+
+// ember serve
+export function serve() {
+	if (serveOp) {
+		serveOp.showOutputChannel();
+	} else {
+		serveOp = new emberOps.EmberOperation('serve');
+	}
+}
+
+/*
+// Helper Functions 
+*/
 
 // Is the current project setup for Visual Studio Code?
 export function isProjectSetup() : boolean {

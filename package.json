@@ -41,6 +41,14 @@
       {
         "command": "extension.setupProject",
         "title": "Ember: Setup Project"
+      },
+      {
+        "command": "extension.build",
+        "title": "Ember: Build"
+      },
+      {
+        "command": "extension.serve",
+        "title": "Ember: Serve, Watch & Recompile on Change"
       }
     ]
   },
