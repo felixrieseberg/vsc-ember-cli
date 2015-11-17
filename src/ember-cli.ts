@@ -12,7 +12,22 @@ export class EmberCliManager {
 	constructor() {
 		this._cache = new cache.DumbCache({preload: true});
 	}
-
+	
+	// ember addon
+	public addon() {
+		let addonOps = new emberOps.EmberOperation('addon', {
+			isOutputChannelVisible: false
+		});
+		
+		addonOps.run().then((result : emberOps.emberOperationResult) => {
+			if (result && result.code === 0) {
+				window.showInformationMessage('Addon folder structure created!');
+			} else {
+				window.showErrorMessage('Addon folder structure creation failed.');
+			}
+		});
+	}
+	
 	// ember version
 	public version() {
 		let versionOps = new emberOps.EmberOperation('version', {

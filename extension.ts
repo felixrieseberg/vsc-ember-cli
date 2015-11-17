@@ -11,6 +11,7 @@ export function activate() {
 	});
 	
 	// Register Commands
+	commands.registerCommand('extension.addon', () => execute('addon'));
 	commands.registerCommand('extension.setupProject', () => execute('setupProject'));
 	commands.registerCommand('extension.build', () => execute('build'));
 	commands.registerCommand('extension.serve', () => execute('serve'));
