@@ -13,6 +13,12 @@ export class EmberCliManager {
 		this._cache = new cache.DumbCache({preload: true});
 	}
 	
+	// ember init
+	public init() {
+		let initOp = new emberOps.EmberOperation(['init']);
+		this.setupProject();
+	}
+	
 	// ember build
 	public build() {
 		let buildOp = new emberOps.EmberOperation('build');
