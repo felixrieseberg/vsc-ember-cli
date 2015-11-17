@@ -72,11 +72,27 @@ export class EmberCliManager {
 
 	// ember build
 	public build() {
-		let buildOp = new emberOps.EmberOperation('build');
-		buildOp.run().then((result : emberOps.emberOperationResult) => {
-			if (result.code === 0) {
-				window.showInformationMessage('Project successfully built!');
+		let quickPickItems : Array<vscode.QuickPickItem> = [
+			{
+				label: 'development',
+				description: 'Build with env=development'
+			},
+			{
+				label: 'production',
+				description: 'Build with env=production'
 			}
+		]
+		
+		window.showQuickPick(quickPickItems).then((result) => {
+			if (!result) return;
+			
+			let envarg = (result.label === 'description') ? '-dev' : '-prod';
+			let buildOp = new emberOps.EmberOperation(['build', envarg]);
+			buildOp.run().then((result : emberOps.emberOperationResult) => {
+				if (result.code === 0) {
+					window.showInformationMessage('Project successfully built!');
+				}
+			});
 		});
 	}
 
