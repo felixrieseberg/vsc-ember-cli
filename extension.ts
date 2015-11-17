@@ -16,5 +16,6 @@ export function activate() {
 	commands.registerCommand('extension.setupProject', () => emberManager.setupProject());
 	commands.registerCommand('extension.build', () => emberManager.build());
 	commands.registerCommand('extension.serve', () => emberManager.serve());
-	commands.registerCommand('extension.generate', () => emberManager.generate());
+	commands.registerCommand('extension.generate', () => emberManager.blueprint('generate'));
+	commands.registerCommand('extension.destroy', () => emberManager.blueprint('destroy'));
 }

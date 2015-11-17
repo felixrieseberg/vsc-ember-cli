@@ -27,11 +27,13 @@ export class EmberCliManager {
 		}
 	}
 	
-	// ember generate
-	public generate() {
+	// ember generate & ember destroy
+	public blueprint(type : string) {
 		if (!this._cache.generateChoices) {
 			this._cache.preload();
 		}
+		
+		if (type !== 'generate' && type !== 'destroy') return;
 		
 		let qpChoices : Array<vscode.QuickPickItem> = this._cache.generateChoices.map((element) => {
 			return {
@@ -43,7 +45,7 @@ export class EmberCliManager {
 		});
 		
 		window.showQuickPick(qpChoices, {
-			placeHolder: 'Which blueprint do you want to generate?',
+			placeHolder: `Which blueprint do you want to ${type}?`,
 			matchOnDescription: true
 		}).then((result : any) => {
 			let optionPromises = [];
@@ -63,7 +65,7 @@ export class EmberCliManager {
 			
 			Promise.all(optionPromises).then((results) => {
 				let generateArgs = optionResults.join(' ');
-				new emberOps.EmberOperation(['generate', result.label, generateArgs], {
+				new emberOps.EmberOperation([type, result.label, generateArgs], {
 					showOutputChannel: false
 				});
 			});

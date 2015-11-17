@@ -26,7 +26,8 @@
     "onCommand:extension.setupProject",
     "onCommand:extension.build",
     "onCommand:extension.serve",
-    "onCommand:extension.generate"
+    "onCommand:extension.generate",
+    "onCommand:extension.destroy"
   ],
   "bugs": {
     "url": "https://github.com/felixrieseberg/vsc-ember-cli/issues"
@@ -54,6 +55,10 @@
       {
         "command": "extension.generate",
         "title": "Ember: Generate"
+      },
+      {
+        "command": "extension.destroy",
+        "title": "Ember: Destroy"
       }
     ]
   },

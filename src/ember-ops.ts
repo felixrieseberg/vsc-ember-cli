@@ -16,7 +16,7 @@ export class EmberOperation {
 		if (!workspace || !workspace.rootPath) return;
 		let cmdArgs : string[] = (Array.isArray(cmd)) ? cmd : [cmd];
 			
-		this._oc = window.createOutputChannel(`Ember: ${helpers.capitalizeFirstLetter(cmdArgs[0])} Project`);
+		this._oc = window.createOutputChannel(`Ember: ${helpers.capitalizeFirstLetter(cmdArgs[0])}`);
 		
 		this._process = this._spawn('ember', cmdArgs, {
 			cwd: workspace.rootPath
@@ -34,7 +34,7 @@ export class EmberOperation {
 	
 		this._process.on('close', (code) => {
 			this._oc.appendLine(`Ember ${cmd} process exited with code ${code}`);
-			this._oc.hide();
+			if (options.showOutputChannel) this._oc.hide();
 		});
 		
 		this.created = true;
