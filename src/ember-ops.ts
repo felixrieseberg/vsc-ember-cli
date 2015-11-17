@@ -52,6 +52,8 @@ export class EmberOperation {
 		return new Promise((resolve, reject) => {
 			if (!workspace || !workspace.rootPath) return reject();
 			
+			let lastOut = '';
+			
 			this._oc = window.createOutputChannel(`Ember: ${helpers.capitalizeFirstLetter(this.cmd[0])}`);
 		
 			this._process = this._spawn('ember', this.cmd, {
@@ -61,8 +63,19 @@ export class EmberOperation {
 			if (this._isOutputChannelVisible) this._oc.show();
 			
 			this._process.stdout.on('data', (data) => {
+				let out = data.toString();
+				
+				if (lastOut && out && (lastOut + '.' === out) 
+					|| (lastOut.slice(0, lastOut.length - 1)) === out
+					|| (lastOut.slice(0, lastOut.length - 2)) === out
+					|| (lastOut.slice(0, lastOut.length - 3)) === out) {
+					lastOut = out;
+					return this._oc.append('.');
+				}
+				
 				this._oc.appendLine(data);
 				this._stdout.push(data);
+				lastOut = out;
 			});
 		
 			this._process.stderr.on('data', (data) => {
