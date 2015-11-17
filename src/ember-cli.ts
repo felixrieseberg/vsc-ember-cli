@@ -8,11 +8,11 @@ import cache = require('./dumb-cache');
 
 export class EmberCliManager {
 	private _cache : cache.DumbCache;
-	
+
 	constructor() {
 		this._cache = new cache.DumbCache({preload: true});
 	}
-	
+
 	// ember version
 	public version() {
 		let versionOps = new emberOps.EmberOperation('version', {
@@ -24,7 +24,7 @@ export class EmberCliManager {
 			}
 		});
 	}
-	
+
 	// ember install
 	public install() {
 		window.showInputBox({
@@ -35,7 +35,7 @@ export class EmberCliManager {
 			installOp.run();
 		});
 	}
-	
+
 	// ember new
 	public new() {
 		window.showInputBox({
@@ -47,14 +47,14 @@ export class EmberCliManager {
 			this.setupProject();
 		})
 	}
-	
+
 	// ember init
 	public init() {
 		let initOp = new emberOps.EmberOperation(['init']);
 		initOp.run();
 		this.setupProject();
 	}
-	
+
 	// ember build
 	public build() {
 		let buildOp = new emberOps.EmberOperation('build');
@@ -64,7 +64,7 @@ export class EmberCliManager {
 			}
 		});
 	}
-	
+
 	// ember serve
 	public serve() {
 		if (this._cache.serveOperation) {
@@ -74,15 +74,15 @@ export class EmberCliManager {
 			this._cache.serveOperation.run();
 		}
 	}
-	
+
 	// ember generate & ember destroy
 	public blueprint(type : string) {
 		if (!this._cache.generateChoices) {
 			return this._cache.preload().then(() => this.blueprint(type));
 		}
-		
+
 		if (type !== 'generate' && type !== 'destroy') return;
-		
+
 		let qpChoices : Array<vscode.QuickPickItem> = this._cache.generateChoices.map((element) => {
 			return {
 				label: element.name,
@@ -91,7 +91,7 @@ export class EmberCliManager {
 				availableOptions: element.availableOptions
 			}
 		});
-		
+
 		window.showQuickPick(qpChoices, {
 			placeHolder: `Which blueprint do you want to ${type}?`,
 			matchOnDescription: true
@@ -101,11 +101,11 @@ export class EmberCliManager {
 			let optionPromises = [];
 			let optionResults = [];
 			let gdName;
-			
+
 			if (result.anonymousOptions && result.anonymousOptions.length > 0) {
 				for (var i = 0; i < result.anonymousOptions.length; i++) {
 					var name = result.anonymousOptions[i];
-	
+
 					optionPromises.push(window.showInputBox({
 						prompt: `${helpers.capitalizeFirstLetter(name)}?`
 					}).then((promptResult) => {
@@ -114,7 +114,7 @@ export class EmberCliManager {
 					}));
 				}
 			}
-			
+
 			Promise.all(optionPromises).then((results) => {
 				let generateArgs = optionResults.join(' ');
 				let blueprintOp = new emberOps.EmberOperation([type, result.label, generateArgs], {
@@ -129,25 +129,49 @@ export class EmberCliManager {
 			});
 		});
 	}
-	
+
+	// ember test
+	public test() {
+		let testOp = new emberOps.EmberOperation(['test']);
+		testOp.run().then((result : emberOps.emberOperationResult) => {
+			if (result && result.code === 0) {
+				window.showInformationMessage('Tests passed with code ' + result.code);
+			} else {
+				window.showErrorMessage('Tests failed with error code ' + result.code);
+			}
+		});
+	}
+
+	// ember test (server)
+	public testServer() {
+		if (this._cache.testServeOperation) {
+			this._cache.testServeOperation.kill();
+		}
+
+		this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
+			isOutputChannelVisible: false
+		});
+		this._cache.testServeOperation.run();
+	}
+
 	/*
-	// Helper Functions 
+	// Helper Functions
 	*/
-	
+
 	// Is the current project setup for Visual Studio Code?
 	public isProjectSetup() : boolean {
 		return false;
 	}
-	
+
 	// Is the current project an Ember Cli project?
 	public isProjectEmberCli() : boolean {
 		return true;
 	}
-	
+
 	// Set the project up
 	public setupProject() : boolean {
 		if (!workspace || !workspace.rootPath) return false;
-		
+
 		fileOps.appendVSCIgnore(constants.ignoreItems);
 		fileOps.appendJSConfig(constants.jsConfig);
 	}

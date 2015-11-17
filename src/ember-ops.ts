@@ -36,8 +36,15 @@ export class EmberOperation {
 	
 	public hideOutputChannel() {
 		if (this._oc) {
+			this._oc.dispose();
 			this._oc.hide();
 			this._isOutputChannelVisible = false;
+		}
+	}
+	
+	public kill() {
+		if (this._process) {
+			this._process.kill();
 		}
 	}
 	

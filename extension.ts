@@ -20,6 +20,8 @@ export function activate() {
 	commands.registerCommand('extension.generate', () => execute('blueprint', ['generate']));
 	commands.registerCommand('extension.destroy', () => execute('blueprint', ['destroy']));
 	commands.registerCommand('extension.version', () => execute('version'));
+	commands.registerCommand('extension.test', () => execute('test'));
+	commands.registerCommand('extension.testServer', () => execute('testServer'));
 }
 
 function execute(cmd? : string, arg? : Array<any>) {

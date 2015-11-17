@@ -32,6 +32,8 @@
     "onCommand:extension.new",
     "onCommand:extension.install",
     "onCommand:extension.version",
+    "onCommand:extension.test",
+    "onCommand:extension.testServer",
     "workspaceContains:.ember-cli"
   ],
   "bugs": {
@@ -80,6 +82,14 @@
       {
         "command": "extension.version",
         "title": "Ember: Version Display"
+      },
+      {
+        "command": "extension.test",
+        "title": "Ember: Test"
+      },
+      {
+        "command": "extension.testServer",
+        "title": "Ember: Test (Server Mode)"
       }
     ]
   },

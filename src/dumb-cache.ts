@@ -3,6 +3,7 @@ import emberOps = require('./ember-ops');
 export class DumbCache {
 	public generateChoices;
 	public serveOperation : emberOps.EmberOperation;
+	public testServeOperation : emberOps.EmberOperation;
 	
 	public preload() : Promise<any> {
 		return this._preloadGenerateChoices();
