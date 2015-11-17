@@ -13,6 +13,27 @@ export class EmberCliManager {
 		this._cache = new cache.DumbCache({preload: true});
 	}
 	
+	// ember install
+	public install() {
+		window.showInputBox({
+			prompt: 'Name of the addon to install?'
+		}).then((result) => {
+			if (!result || result === '') return;
+			let installOp = new emberOps.EmberOperation(['install', result]);
+		});
+	}
+	
+	// ember new
+	public new() {
+		window.showInputBox({
+			prompt: 'Name of the new application?'
+		}).then((result) => {
+			if (!result || result === '') return;
+			let newOp = new emberOps.EmberOperation(['new', result]);
+			this.setupProject();
+		})
+	}
+	
 	// ember init
 	public init() {
 		let initOp = new emberOps.EmberOperation(['init']);

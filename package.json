@@ -28,7 +28,9 @@
     "onCommand:extension.serve",
     "onCommand:extension.generate",
     "onCommand:extension.destroy",
-    "onCommand:extension.init"
+    "onCommand:extension.init",
+    "onCommand:extension.new",
+    "onCommand:extension.install"
   ],
   "bugs": {
     "url": "https://github.com/felixrieseberg/vsc-ember-cli/issues"
@@ -47,7 +49,7 @@
       },
       {
         "command": "extension.build",
-        "title": "Ember: Build"
+        "title": "Ember: Build App"
       },
       {
         "command": "extension.serve",
@@ -55,15 +57,23 @@
       },
       {
         "command": "extension.generate",
-        "title": "Ember: Generate"
+        "title": "Ember: Generate Blueprint"
       },
       {
         "command": "extension.destroy",
-        "title": "Ember: Destroy"
+        "title": "Ember: Destroy Blueprint"
       },
       {
         "command": "extension.init",
-        "title": "Ember: Init"
+        "title": "Ember: Init App"
+      },
+      {
+        "command": "extension.new",
+        "title": "Ember: New App"
+      },
+      {
+        "command": "extension.install",
+        "title": "Ember: Install Addon"
       }
     ]
   },
