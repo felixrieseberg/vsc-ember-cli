@@ -30,7 +30,9 @@
     "onCommand:extension.destroy",
     "onCommand:extension.init",
     "onCommand:extension.new",
-    "onCommand:extension.install"
+    "onCommand:extension.install",
+    "onCommand:extension.version",
+    "workspaceContains:.ember-cli"
   ],
   "bugs": {
     "url": "https://github.com/felixrieseberg/vsc-ember-cli/issues"
@@ -74,6 +76,10 @@
       {
         "command": "extension.install",
         "title": "Ember: Install Addon"
+      },
+      {
+        "command": "extension.version",
+        "title": "Ember: Version Display"
       }
     ]
   },

@@ -3,22 +3,42 @@ import * as embercli from './src/ember-cli';
 import * as emberOps from './src/ember-ops';
 
 var emberManager : embercli.EmberCliManager;
+var installed : boolean = false;
 
 export function activate() {
-	if (!emberManager) emberManager = new embercli.EmberCliManager();
-	
-	// Ensure Ember Cli is installed 
-	if (!emberOps.isEmberCliInstalled()) {
-		window.showErrorMessage('Ember Cli is not installed');
-	};
+	workspace.findFiles('.ember-cli', '', 1).then((result) => {
+		execute();
+	});
 	
 	// Register Commands
-	commands.registerCommand('extension.setupProject', () => emberManager.setupProject());
-	commands.registerCommand('extension.build', () => emberManager.build());
-	commands.registerCommand('extension.serve', () => emberManager.serve());
-	commands.registerCommand('extension.init', () => emberManager.init());
-	commands.registerCommand('extension.new', () => emberManager.new());
-	commands.registerCommand('extension.install', () => emberManager.install());
-	commands.registerCommand('extension.generate', () => emberManager.blueprint('generate'));
-	commands.registerCommand('extension.destroy', () => emberManager.blueprint('destroy'));
+	commands.registerCommand('extension.setupProject', () => execute('setupProject'));
+	commands.registerCommand('extension.build', () => execute('build'));
+	commands.registerCommand('extension.serve', () => execute('serve'));
+	commands.registerCommand('extension.init', () => execute('init'));
+	commands.registerCommand('extension.new', () => execute('new'));
+	commands.registerCommand('extension.install', () => execute('install'));
+	commands.registerCommand('extension.generate', () => execute('blueprint', ['generate']));
+	commands.registerCommand('extension.destroy', () => execute('blueprint', ['destroy']));
+	commands.registerCommand('extension.version', () => execute('version'));
+}
+
+function execute(cmd? : string, arg? : Array<any>) {
+	if (!emberManager) emberManager = new embercli.EmberCliManager();
+	if (!installed) installed = emberOps.isEmberCliInstalled();
+	if (!cmd) return;
+		
+	// Ensure Ember Cli is installed 
+	if (!installed) {
+		return window.showErrorMessage('Ember Cli is not installed');
+	};
+	
+	let ecmd = emberManager[cmd];
+	if (typeof ecmd === 'function') {
+		try {
+			ecmd.apply(emberManager, arg);
+		} catch (e) {
+			// Well, clearly we didn't call a function			
+			console.log(e);
+		}
+	}
 }

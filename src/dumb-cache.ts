@@ -4,8 +4,8 @@ export class DumbCache {
 	public generateChoices;
 	public serveOperation : emberOps.EmberOperation;
 	
-	public preload() {
-		this._preloadGenerateChoices();
+	public preload() : Promise<any> {
+		return this._preloadGenerateChoices();
 	}
 	
 	constructor(options = { preload: false}) {
@@ -14,13 +14,17 @@ export class DumbCache {
 		}
 	}
 	
-	private _preloadGenerateChoices() {
-		let rawChoices = emberOps.getHelp('generate');
-		if (rawChoices && rawChoices.commands) {
-			this.generateChoices = rawChoices.commands[0].availableBlueprints[0]['ember-cli'];
-		} else {
-			// Todo: Handle this
-			return;
-		}
+	private _preloadGenerateChoices() : Promise<any> {
+		return new Promise((resolve, reject) => {
+			emberOps.getHelp('generate').then((result) => {
+				if (result && result.commands) {
+					this.generateChoices = result.commands[0].availableBlueprints[0]['ember-cli'];
+					resolve();
+				} else {
+					// Todo: Handle this
+					reject();
+				}
+			});
+		});
 	}
 }

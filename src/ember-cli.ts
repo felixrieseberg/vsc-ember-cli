@@ -13,6 +13,18 @@ export class EmberCliManager {
 		this._cache = new cache.DumbCache({preload: true});
 	}
 	
+	// ember version
+	public version() {
+		let versionOps = new emberOps.EmberOperation('version', {
+			isOutputChannelVisible: false
+		});
+		versionOps.run().then((result : emberOps.emberOperationResult) => {
+			if (result.code === 0) {
+				window.showInformationMessage('Ember Cli ' + result.stdout);
+			}
+		});
+	}
+	
 	// ember install
 	public install() {
 		window.showInputBox({
@@ -20,6 +32,7 @@ export class EmberCliManager {
 		}).then((result) => {
 			if (!result || result === '') return;
 			let installOp = new emberOps.EmberOperation(['install', result]);
+			installOp.run();
 		});
 	}
 	
@@ -30,6 +43,7 @@ export class EmberCliManager {
 		}).then((result) => {
 			if (!result || result === '') return;
 			let newOp = new emberOps.EmberOperation(['new', result]);
+			newOp.run();
 			this.setupProject();
 		})
 	}
@@ -37,12 +51,18 @@ export class EmberCliManager {
 	// ember init
 	public init() {
 		let initOp = new emberOps.EmberOperation(['init']);
+		initOp.run();
 		this.setupProject();
 	}
 	
 	// ember build
 	public build() {
 		let buildOp = new emberOps.EmberOperation('build');
+		buildOp.run().then((result : emberOps.emberOperationResult) => {
+			if (result.code === 0) {
+				window.showInformationMessage('Project successfully built!');
+			}
+		});
 	}
 	
 	// ember serve
@@ -51,13 +71,14 @@ export class EmberCliManager {
 			this._cache.serveOperation.showOutputChannel();
 		} else {
 			this._cache.serveOperation = new emberOps.EmberOperation('serve');
+			this._cache.serveOperation.run();
 		}
 	}
 	
 	// ember generate & ember destroy
 	public blueprint(type : string) {
 		if (!this._cache.generateChoices) {
-			this._cache.preload();
+			return this._cache.preload().then(() => this.blueprint(type));
 		}
 		
 		if (type !== 'generate' && type !== 'destroy') return;
@@ -75,8 +96,11 @@ export class EmberCliManager {
 			placeHolder: `Which blueprint do you want to ${type}?`,
 			matchOnDescription: true
 		}).then((result : any) => {
+			if (!result) return;
+
 			let optionPromises = [];
 			let optionResults = [];
+			let gdName;
 			
 			if (result.anonymousOptions && result.anonymousOptions.length > 0) {
 				for (var i = 0; i < result.anonymousOptions.length; i++) {
@@ -86,14 +110,21 @@ export class EmberCliManager {
 						prompt: `${helpers.capitalizeFirstLetter(name)}?`
 					}).then((promptResult) => {
 						optionResults.push(promptResult);
+						gdName = (i === 1) ? promptResult : gdName;
 					}));
 				}
 			}
 			
 			Promise.all(optionPromises).then((results) => {
 				let generateArgs = optionResults.join(' ');
-				new emberOps.EmberOperation([type, result.label, generateArgs], {
-					showOutputChannel: false
+				let blueprintOp = new emberOps.EmberOperation([type, result.label, generateArgs], {
+					isOutputChannelVisible: false
+				});
+				blueprintOp.run().then((result : emberOps.emberOperationResult) => {
+					if (result.code === 0) {
+						let message = `${gdName} sucessfully ${(type === 'generate') ? 'generated' : 'destroyed'}!`;
+						window.showInformationMessage(message);
+					}
 				});
 			});
 		});
