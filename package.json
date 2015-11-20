@@ -62,7 +62,7 @@
       },
       {
         "command": "extension.serve",
-        "title": "Ember: Serve, Watch & Recompile on Change"
+        "title": "Ember: Serve (Start, Stop, Restart)"
       },
       {
         "command": "extension.generate",
@@ -94,7 +94,7 @@
       },
       {
         "command": "extension.testServer",
-        "title": "Ember: Test (Server Mode)"
+        "title": "Ember: Test Server (Start, Stop, Restart)"
       }
     ]
   },

@@ -99,7 +99,35 @@ export class EmberCliManager {
 	// ember serve
 	public serve() {
 		if (this._cache.serveOperation) {
-			this._cache.serveOperation.showOutputChannel();
+			let quickPickItems : Array<vscode.QuickPickItem> = [
+				{
+					label: 'Show Output',
+					description: 'Display the Ember Serve Task Output'
+				},
+				{
+					label: 'Restart',
+					description: 'Restart the serve process'
+				},
+				{
+					label: 'Stop',
+					description: 'Kill the serve process'
+				}
+			]
+			
+			window.showQuickPick(quickPickItems).then((result) => {
+				if (result.label === 'Show Output') {
+					this._cache.serveOperation.showOutputChannel();
+				} else if (result.label === 'Stop') {
+					this._cache.serveOperation.kill();
+					this._cache.serveOperation.dispose();
+					this._cache.serveOperation = null;
+				} else {
+					this._cache.serveOperation.kill();
+					this._cache.serveOperation.dispose();
+					this._cache.serveOperation = new emberOps.EmberOperation('serve');
+					this._cache.serveOperation.run();
+				}
+			});
 		} else {
 			this._cache.serveOperation = new emberOps.EmberOperation('serve');
 			this._cache.serveOperation.run();
@@ -176,13 +204,40 @@ export class EmberCliManager {
 	// ember test (server)
 	public testServer() {
 		if (this._cache.testServeOperation) {
-			this._cache.testServeOperation.kill();
+			let quickPickItems : Array<vscode.QuickPickItem> = [
+				{
+					label: 'Restart',
+					description: 'Restart the serve process'
+				},
+				{
+					label: 'Stop',
+					description: 'Kill the serve process'
+				}
+			]
+			
+			window.showQuickPick(quickPickItems).then((result) => {
+				if (result.label === 'Stop') {
+					this._cache.testServeOperation.kill();
+					this._cache.testServeOperation.dispose();
+					this._cache.testServeOperation = null;
+					window.showInformationMessage('Ember Cli: Test Server stopped');
+				} else {
+					this._cache.testServeOperation.kill();
+					this._cache.testServeOperation.dispose();
+					this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
+						isOutputChannelVisible: false
+					});;
+					this._cache.testServeOperation.run();
+					window.showInformationMessage('Ember Cli: Test Server is running');
+				}
+			});
+		} else {
+			this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
+				isOutputChannelVisible: false
+			});
+			this._cache.testServeOperation.run();
+			window.showInformationMessage('Ember Cli: Test Server is running');
 		}
-
-		this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
-			isOutputChannelVisible: false
-		});
-		this._cache.testServeOperation.run();
 	}
 
 	/*
