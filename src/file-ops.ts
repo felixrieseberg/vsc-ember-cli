@@ -36,6 +36,11 @@ export function appendJSConfig(data) : boolean {
 	}
 }
 
+export function hasJSConfig() : boolean {
+	if (!workspace || !workspace.rootPath) return false;
+	return pathExists.sync(path.join(workspace.rootPath, 'jsconfig.json'));
+}
+
 // Appends the current project's .vscodeignore file with additional items
 export function appendVSCIgnore(ignoreItems : Array<string>) : Boolean {
 	if (!ignoreItems || ignoreItems.length === 0 || !workspace || !workspace.rootPath) return false;

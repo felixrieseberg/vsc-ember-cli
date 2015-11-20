@@ -1,13 +1,18 @@
 import {window, commands, workspace} from 'vscode';
 import * as embercli from './src/ember-cli';
 import * as emberOps from './src/ember-ops';
+import * as fileOps from './src/file-ops';
 
 var emberManager : embercli.EmberCliManager;
 var installed : boolean = false;
 
 export function activate() {
 	workspace.findFiles('.ember-cli', '', 1).then((result) => {
-		execute();
+		if (!fileOps.hasJSConfig()) {
+			execute('setupProject');
+		} else {
+			execute();
+		}
 	});
 	
 	// Register Commands
