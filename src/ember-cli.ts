@@ -1,25 +1,26 @@
-import {window, commands, workspace} from 'vscode';
+import { window, commands, workspace } from 'vscode';
 import * as vscode from 'vscode';
-import constants = require('./constants');
-import fileOps = require('./file-ops');
-import emberOps = require('./ember-ops');
-import helpers = require('./helpers');
-import cache = require('./dumb-cache');
+
+import { ignoreItems, jsConfig } from './constants';
+import { appendVSCIgnore, appendJSConfig } from './file-ops';
+import { emberOperationResult, EmberOperation } from './ember-ops';
+import { capitalizeFirstLetter } from './helpers';
+import DumbCache from './dumb-cache';
 
 export class EmberCliManager {
-	private _cache : cache.DumbCache;
+	private _cache : DumbCache;
 
 	constructor() {
-		this._cache = new cache.DumbCache({preload: true});
+		this._cache = new DumbCache({preload: true});
 	}
-	
+
 	// ember addon
 	public addon() {
-		let addonOps = new emberOps.EmberOperation('addon', {
+		let addonOps = new EmberOperation('addon', {
 			isOutputChannelVisible: false
 		});
-		
-		addonOps.run().then((result : emberOps.emberOperationResult) => {
+
+		addonOps.run().then((result : emberOperationResult) => {
 			if (result && result.code === 0) {
 				window.showInformationMessage('Addon folder structure created!');
 			} else {
@@ -27,13 +28,13 @@ export class EmberCliManager {
 			}
 		});
 	}
-	
+
 	// ember version
 	public version() {
-		let versionOps = new emberOps.EmberOperation('version', {
+		let versionOps = new EmberOperation('version', {
 			isOutputChannelVisible: false
 		});
-		versionOps.run().then((result : emberOps.emberOperationResult) => {
+		versionOps.run().then((result : emberOperationResult) => {
 			if (result.code === 0) {
 				window.showInformationMessage('Ember Cli ' + result.stdout);
 			}
@@ -46,7 +47,7 @@ export class EmberCliManager {
 			prompt: 'Name of the addon to install?'
 		}).then((result) => {
 			if (!result || result === '') return;
-			let installOp = new emberOps.EmberOperation(['install', result]);
+			let installOp = new EmberOperation(['install', result]);
 			installOp.run();
 		});
 	}
@@ -57,7 +58,7 @@ export class EmberCliManager {
 			prompt: 'Name of the new application?'
 		}).then((result) => {
 			if (!result || result === '') return;
-			let newOp = new emberOps.EmberOperation(['new', result]);
+			let newOp = new EmberOperation(['new', result]);
 			newOp.run();
 			this.setupProject();
 		})
@@ -65,7 +66,7 @@ export class EmberCliManager {
 
 	// ember init
 	public init() {
-		let initOp = new emberOps.EmberOperation(['init']);
+		let initOp = new EmberOperation(['init']);
 		initOp.run();
 		this.setupProject();
 	}
@@ -82,13 +83,13 @@ export class EmberCliManager {
 				description: 'Build with env=production'
 			}
 		]
-		
+
 		window.showQuickPick(quickPickItems).then((result) => {
 			if (!result) return;
-			
+
 			let envarg = (result.label === 'description') ? '-dev' : '-prod';
-			let buildOp = new emberOps.EmberOperation(['build', envarg]);
-			buildOp.run().then((result : emberOps.emberOperationResult) => {
+			let buildOp = new EmberOperation(['build', envarg]);
+			buildOp.run().then((result : emberOperationResult) => {
 				if (result.code === 0) {
 					window.showInformationMessage('Project successfully built!');
 				}
@@ -113,7 +114,7 @@ export class EmberCliManager {
 					description: 'Kill the serve process'
 				}
 			]
-			
+
 			window.showQuickPick(quickPickItems).then((result) => {
 				if (result.label === 'Show Output') {
 					this._cache.serveOperation.showOutputChannel();
@@ -124,12 +125,12 @@ export class EmberCliManager {
 				} else {
 					this._cache.serveOperation.kill();
 					this._cache.serveOperation.dispose();
-					this._cache.serveOperation = new emberOps.EmberOperation('serve');
+					this._cache.serveOperation = new EmberOperation('serve');
 					this._cache.serveOperation.run();
 				}
 			});
 		} else {
-			this._cache.serveOperation = new emberOps.EmberOperation('serve');
+			this._cache.serveOperation = new EmberOperation('serve');
 			this._cache.serveOperation.run();
 		}
 	}
@@ -166,7 +167,7 @@ export class EmberCliManager {
 					var name = result.anonymousOptions[i];
 
 					optionPromises.push(window.showInputBox({
-						prompt: `${helpers.capitalizeFirstLetter(name)}?`
+						prompt: `${capitalizeFirstLetter(name)}?`
 					}).then((promptResult) => {
 						optionResults.push(promptResult);
 						gdName = (i === 1) ? promptResult : gdName;
@@ -176,10 +177,10 @@ export class EmberCliManager {
 
 			Promise.all(optionPromises).then((results) => {
 				let generateArgs = optionResults.join(' ');
-				let blueprintOp = new emberOps.EmberOperation([type, result.label, generateArgs], {
+				let blueprintOp = new EmberOperation([type, result.label, generateArgs], {
 					isOutputChannelVisible: false
 				});
-				blueprintOp.run().then((result : emberOps.emberOperationResult) => {
+				blueprintOp.run().then((result : emberOperationResult) => {
 					if (result.code === 0) {
 						let message = `${gdName} sucessfully ${(type === 'generate') ? 'generated' : 'destroyed'}!`;
 						window.showInformationMessage(message);
@@ -191,8 +192,8 @@ export class EmberCliManager {
 
 	// ember test
 	public test() {
-		let testOp = new emberOps.EmberOperation(['test']);
-		testOp.run().then((result : emberOps.emberOperationResult) => {
+		let testOp = new EmberOperation(['test']);
+		testOp.run().then((result : emberOperationResult) => {
 			if (result && result.code === 0) {
 				window.showInformationMessage('Tests passed with code ' + result.code);
 			} else {
@@ -214,7 +215,7 @@ export class EmberCliManager {
 					description: 'Kill the serve process'
 				}
 			]
-			
+
 			window.showQuickPick(quickPickItems).then((result) => {
 				if (result.label === 'Stop') {
 					this._cache.testServeOperation.kill();
@@ -224,7 +225,7 @@ export class EmberCliManager {
 				} else {
 					this._cache.testServeOperation.kill();
 					this._cache.testServeOperation.dispose();
-					this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
+					this._cache.testServeOperation = new EmberOperation(['test', '--server'], {
 						isOutputChannelVisible: false
 					});;
 					this._cache.testServeOperation.run();
@@ -232,7 +233,7 @@ export class EmberCliManager {
 				}
 			});
 		} else {
-			this._cache.testServeOperation = new emberOps.EmberOperation(['test', '--server'], {
+			this._cache.testServeOperation = new EmberOperation(['test', '--server'], {
 				isOutputChannelVisible: false
 			});
 			this._cache.testServeOperation.run();
@@ -258,7 +259,7 @@ export class EmberCliManager {
 	public setupProject() : boolean {
 		if (!workspace || !workspace.rootPath) return false;
 
-		fileOps.appendVSCIgnore(constants.ignoreItems);
-		fileOps.appendJSConfig(constants.jsConfig);
+		appendVSCIgnore(constants.ignoreItems);
+		appendJSConfig(constants.jsConfig);
 	}
 }
