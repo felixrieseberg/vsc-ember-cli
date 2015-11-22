@@ -1,0 +1,149 @@
+{
+	"Action Helper": {
+		"prefix": "action",
+		"body": [
+			"{{action \"${1:name}\"$2}}"
+		],
+		"description": "Attaches an action to a DOM element."
+	},
+
+	"Component helper": {
+		"prefix": "component",
+		"body": [
+			"{{component ${1:name}$2}}"
+		],
+		"description": "Adds an instance of a component to the template."
+	},
+
+	"Debugger helper": {
+		"prefix": "debugger",
+		"body": [
+			"{{debugger}}"
+		],
+		"description": "Adds a debugger to the template."
+	},
+
+	"Each Loop": {
+		"prefix": "each",
+		"body": [
+			"{{#each ${1:list} as |${2:item}|}}",
+			"\t{{${2:item}}}",
+			"{{/each}}"
+		],
+		"description": "Loops over elements in a colletion."
+	},
+
+	"Each-In Loop": {
+		"prefix": "each-in",
+		"body": [
+			"{{#each-in ${1:object} as |${2:key} ${3:value}|}}",
+			"\t{{${2:key}}} {{${3:value}}}",
+			"{{/each-in}}"
+		],
+		"description": "Loops over properties on an object."
+	},
+
+	"Get helper": {
+		"prefix": "get",
+		"body": [
+			"{{get ${1:object} ${2:property}}}"
+		],
+		"description": "Look up a property on an object."
+	},
+
+	"If helper": {
+		"prefix": "if",
+		"body": [
+			"{{#if ${1:truthyVar}}}",
+			"\t$2",
+			"{{/if}}"
+		],
+		"description": "Renders the block for a truthy value."
+	},
+
+	"Input Component": {
+		"prefix": "input",
+		"body": [
+			"{{input value=${1:value}}}"
+		],
+		"description": "Adds an input component."
+	},
+
+	"Link To Helper": {
+		"prefix": "link-to",
+		"body": [
+			"{{#link-to \"${1:routeName}\"}}",
+			"\t${2:content}",
+			"{{/link-to}}"
+		],
+		"description": "Renders a link to the supplied routeName."
+	},
+
+	"Location helper": {
+		"prefix": "loc",
+		"body": [
+			"{{loc \"${1:string}\"}}"
+		],
+		"description": "Looks up a translation for the given string."
+	},
+
+	"Log helper": {
+		"prefix": "log",
+		"body": [
+			"{{log ${1:var}}}"
+		],
+		"description": "Logs a message to the console."
+	},
+
+	"Outlet": {
+		"prefix": "outlet",
+		"body": [
+			"{{outlet$1}}"
+		],
+		"description": "Creates a new outlet."
+	},
+
+	"Partial helper": {
+		"prefix": "partial",
+		"body": [
+			"{{partial \"${1:partialName}\"}}"
+		],
+		"description": "Renders a partial into the template without changing the context."
+	},
+
+	"Textarea Component": {
+		"prefix": "textarea",
+		"body": [
+			"{{textarea value=${1:value}}}"
+		],
+		"description": "Adds a textarea component to the template."
+	},
+
+	"Unbound helper": {
+		"prefix": "unbound",
+		"body": [
+			"{{unbound ${1:name}}}"
+		],
+		"description": "Disconnects bindings."
+	},
+
+	"Unless helper": {
+		"prefix": "unless",
+		"body": [
+			"{{#unless ${1:falseyVar}}}",
+			"\t$2",
+			"{{/unless}}"
+		],
+		"description": "Renders the block for a falsey value."
+	},
+
+	"With helper": {
+		"prefix": "with",
+		"body": [
+			"{{#with ${1:object} as |${2:alias}|}}",
+			"\t{{${2:alias}}}",
+			"{{/with}}"
+		],
+		"description": "Alias a property to a new name."
+	}
+}
