@@ -5,8 +5,8 @@ import * as path from 'path';
 import { jsConfig } from './constants';
 
 // Generic imports
-import * as pathExists from 'path-exists';
-import * as merge from 'merge';
+var pathExists = require('path-exists');
+var merge = require('merge');
 import { EOL } from 'os';
 
 // Merges or overwrites settings in jsconfig.json

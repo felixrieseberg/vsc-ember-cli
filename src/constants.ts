@@ -1,4 +1,4 @@
-export var ignoreItems = [
+export const ignoreItems = [
 	// compiled output
 	'dist/**',
 	'tmp/**',
@@ -14,7 +14,7 @@ export var ignoreItems = [
 	'libpeerconnection.log'
 ];
 
-export var jsConfig = {
+export const jsConfig = {
   'compilerOptions': {
     'target': 'es6',
     'experimentalDecorators': true

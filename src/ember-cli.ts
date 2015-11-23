@@ -259,7 +259,7 @@ export class EmberCliManager {
 	public setupProject() : boolean {
 		if (!workspace || !workspace.rootPath) return false;
 
-		appendVSCIgnore(constants.ignoreItems);
-		appendJSConfig(constants.jsConfig);
+		appendVSCIgnore(ignoreItems);
+		appendJSConfig(jsConfig);
 	}
 }
