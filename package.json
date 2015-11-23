@@ -47,6 +47,12 @@
   },
   "main": "./out/extension",
   "contributes": {
+	"snippets": [
+		{
+			"language": "handlebars",
+			"path": "./snippets/template-helpers.json"
+		}
+	],
     "commands": [
       {
         "command": "extension.addon",
