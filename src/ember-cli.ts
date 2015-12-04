@@ -227,7 +227,7 @@ export class EmberCliManager {
 					this._cache.testServeOperation.dispose();
 					this._cache.testServeOperation = new EmberOperation(['test', '--server'], {
 						isOutputChannelVisible: false
-					});;
+					});
 					this._cache.testServeOperation.run();
 					window.showInformationMessage('Ember Cli: Test Server is running');
 				}

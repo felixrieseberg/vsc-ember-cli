@@ -134,6 +134,12 @@ export function getHelp(cmd: string) : any {
 
 			resolve(result);
 		} catch (e) {
+			if (cmd === 'generate') {
+				// For generate, let's use our fallback
+				let generateFallback = require('../../json/generate.json');
+				return resolve(generateFallback);
+			}
+			
 			reject(e);
 		}
 	});
