@@ -1,4 +1,6 @@
 ## Ember Cli Extension for Visual Studio Code
+[![Build Status](https://travis-ci.org/felixrieseberg/vsc-ember-cli.svg?branch=master)](https://travis-ci.org/felixrieseberg/vsc-ember-cli)
+
 Use Ember Cli directly from Visual Studio Code. After installation, all `ember cli` commands are available through Code's own command list, enabling you for example to generate blueprints, run tests, or build your app without leaving your editor. 
 
 ![Screenshot](screen.gif)

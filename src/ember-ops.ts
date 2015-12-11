@@ -1,12 +1,12 @@
-import { window, commands, workspace, OutputChannel } from 'vscode';
-import * as cp from 'child_process';
+import { window, commands, workspace, OutputChannel } from "vscode";
+import * as cp from "child_process";
 
-import { capitalizeFirstLetter } from './helpers';
+import { capitalizeFirstLetter } from "./helpers";
 
 export interface emberOperationResult {
-	code: Number,
-	stdout: Array<string>,
-	stderr: Array<string>
+	code: Number;
+	stdout: Array<string>;
+	stderr: Array<string>;
 }
 
 export class EmberOperation {
@@ -51,27 +51,31 @@ export class EmberOperation {
 
 	public run() {
 		return new Promise((resolve, reject) => {
-			if (!workspace || !workspace.rootPath) return reject();
+			if (!workspace || !workspace.rootPath) {
+				return reject();
+			}
 
-			let lastOut = '';
+			let lastOut = "";
 
 			this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
 
-			this._process = this._spawn('ember', this.cmd, {
+			this._process = this._spawn("ember", this.cmd, {
 				cwd: workspace.rootPath
 			});
 
-			if (this._isOutputChannelVisible) this._oc.show();
+			if (this._isOutputChannelVisible) {
+				this._oc.show();
+			}
 
-			this._process.stdout.on('data', (data) => {
+			this._process.stdout.on("data", (data) => {
 				let out = data.toString();
 
-				if (lastOut && out && (lastOut + '.' === out)
+				if (lastOut && out && (lastOut + "." === out)
 					|| (lastOut.slice(0, lastOut.length - 1)) === out
 					|| (lastOut.slice(0, lastOut.length - 2)) === out
 					|| (lastOut.slice(0, lastOut.length - 3)) === out) {
 					lastOut = out;
-					return this._oc.append('.');
+					return this._oc.append(".");
 				}
 
 				this._oc.appendLine(data);
@@ -79,14 +83,17 @@ export class EmberOperation {
 				lastOut = out;
 			});
 
-			this._process.stderr.on('data', (data) => {
+			this._process.stderr.on("data", (data) => {
 				this._oc.appendLine(data);
 				this._stderr.push(data);
 			});
 
-			this._process.on('close', (code) => {
+			this._process.on("close", (code) => {
 				this._oc.appendLine(`Ember ${this.cmd[0]} process exited with code ${code}`);
-				if (this._isOutputChannelVisible) this._oc.hide();
+				if (this._isOutputChannelVisible) {
+					this._oc.hide();
+				}
+
 				resolve(<emberOperationResult>{
 					code: parseInt(code),
 					stderr: this._stderr,
@@ -103,16 +110,20 @@ export class EmberOperation {
 	}
 
 	dispose() {
-		if (this._oc) this._oc.dispose();
-		if (this._process) this._process.kill();
+		if (this._oc) {
+			this._oc.dispose();
+		}
+		if (this._process) {
+			this._process.kill();
+		}
 	}
 }
 
 export function isEmberCliInstalled() : boolean {
 	try {
-		let exec = cp.execSync('ember -v');
+		let exec = cp.execSync("ember -v");
 
-		console.log('Ember is apparently installed');
+		console.log("Ember is apparently installed");
 		console.log(exec.toString());
 
 		return true;
@@ -128,18 +139,18 @@ export function getHelp(cmd: string) : any {
 			let result = exec.toString();
 
 			// Clean input
-			let jsonStart = result.indexOf('{');
+			let jsonStart = result.indexOf("{");
 			result = (jsonStart > 0) ? result.slice(jsonStart) : result;
 			result = JSON.parse(result);
 
 			resolve(result);
 		} catch (e) {
-			if (cmd === 'generate') {
-				// For generate, let's use our fallback
-				let generateFallback = require('../../json/generate.json');
+			if (cmd === "generate") {
+				// For generate, let"s use our fallback
+				let generateFallback = require("../../json/generate.json");
 				return resolve(generateFallback);
 			}
-			
+
 			reject(e);
 		}
 	});

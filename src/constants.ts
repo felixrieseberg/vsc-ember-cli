@@ -1,22 +1,22 @@
 export const ignoreItems = [
 	// compiled output
-	'dist/**',
-	'tmp/**',
-	'build/**',
-	'cache/**',
+	"dist/**",
+	"tmp/**",
+	"build/**",
+	"cache/**",
 	// dependencies
-	'node_modules/**',
-	'bower_components/**',
+	"node_modules/**",
+	"bower_components/**",
 	// misc
-	'.sass-cache/**',
-	'connect.lock/**',
-	'coverage/*/**',
-	'libpeerconnection.log'
+	".sass-cache/**",
+	"connect.lock/**",
+	"coverage/*/**",
+	"libpeerconnection.log"
 ];
 
 export const jsConfig = {
-  'compilerOptions': {
-    'target': 'es6',
-    'experimentalDecorators': true
+  "compilerOptions": {
+    "target": "es6",
+    "experimentalDecorators": true
   }
-}
+};

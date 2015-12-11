@@ -1,4 +1,4 @@
-import { EmberOperation, getHelp } from './ember-ops';
+import { EmberOperation, getHelp } from "./ember-ops";
 
 export default class DumbCache {
 	public generateChoices;
@@ -17,9 +17,9 @@ export default class DumbCache {
 
 	private _preloadGenerateChoices() : Promise<any> {
 		return new Promise((resolve, reject) => {
-			getHelp('generate').then((result) => {
+			getHelp("generate").then((result) => {
 				if (result && result.commands) {
-					this.generateChoices = result.commands[0].availableBlueprints[0]['ember-cli'];
+					this.generateChoices = result.commands[0].availableBlueprints[0]["ember-cli"];
 					resolve();
 				} else {
 					// Todo: Handle this
