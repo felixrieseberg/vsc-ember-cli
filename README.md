@@ -27,6 +27,9 @@ Use Ember Cli directly from Visual Studio Code. After installation, all `ember c
 ## Install
 In Visual Studio Code, run `ext install vsc-ember-cli` - or, simply hit `CMD/CTRL + Shift + P`, search for "Install Extension", and then search for "ember cli".
 
+## Bugs and Issues
+Under the covers, this addon is merely executing Ember commands for you. In practice, this sometimes leads to issues, since the addon does not come with Ember Cli and is absolutely reliant on your system being setup properly. To debug issues, set an environment variable named `VSC_EMBER_CLI_DEBUG` - Visual Studio Code will then always display the output window for all operations, allowing you to see what's happening in the terminal.
+
 ## Contributions
 There's a few things that could improve the extension - snippets and IntelliSense support is probably at the very top of everyone's wish list. Contributions are extremely welcome!
 

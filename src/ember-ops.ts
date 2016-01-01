@@ -62,8 +62,9 @@ export class EmberOperation {
 			this._process = this._spawn("ember", this.cmd, {
 				cwd: workspace.rootPath
 			});
-
-			if (this._isOutputChannelVisible) {
+            
+			if (this._isOutputChannelVisible || process.env.VSC_EMBER_CLI_DEBUG) {
+                this._isOutputChannelVisible = true;
 				this._oc.show();
 			}
 
