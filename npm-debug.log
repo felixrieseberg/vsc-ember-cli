@@ -1,0 +1,43 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'compile' ]
+2 info using npm@3.3.6
+3 info using node@v5.0.0
+4 verbose run-script [ 'precompile', 'compile', 'postcompile' ]
+5 info lifecycle vsc-ember-cli@0.1.8~precompile: vsc-ember-cli@0.1.8
+6 silly lifecycle vsc-ember-cli@0.1.8~precompile: no script for precompile, continuing
+7 info lifecycle vsc-ember-cli@0.1.8~compile: vsc-ember-cli@0.1.8
+8 verbose lifecycle vsc-ember-cli@0.1.8~compile: unsafe-perm in lifecycle true
+9 verbose lifecycle vsc-ember-cli@0.1.8~compile: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/fr/Code/vsc-ember-cli/node_modules/.bin:/Users/fr/Code/go/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+10 verbose lifecycle vsc-ember-cli@0.1.8~compile: CWD: /Users/fr/Code/vsc-ember-cli
+11 silly lifecycle vsc-ember-cli@0.1.8~compile: Args: [ '-c',
+11 silly lifecycle   'tsc && node ./node_modules/vscode/bin/compile -watch -p ./' ]
+12 silly lifecycle vsc-ember-cli@0.1.8~compile: Returned: code: 2  signal: null
+13 info lifecycle vsc-ember-cli@0.1.8~compile: Failed to exec compile script
+14 verbose stack Error: vsc-ember-cli@0.1.8 compile: `tsc && node ./node_modules/vscode/bin/compile -watch -p ./`
+14 verbose stack Exit status 2
+14 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:233:16)
+14 verbose stack     at emitTwo (events.js:87:13)
+14 verbose stack     at EventEmitter.emit (events.js:172:7)
+14 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:87:13)
+14 verbose stack     at ChildProcess.emit (events.js:172:7)
+14 verbose stack     at maybeClose (internal/child_process.js:818:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+15 verbose pkgid vsc-ember-cli@0.1.8
+16 verbose cwd /Users/fr/Code/vsc-ember-cli
+17 error Darwin 15.2.0
+18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "compile"
+19 error node v5.0.0
+20 error npm  v3.3.6
+21 error code ELIFECYCLE
+22 error vsc-ember-cli@0.1.8 compile: `tsc && node ./node_modules/vscode/bin/compile -watch -p ./`
+22 error Exit status 2
+23 error Failed at the vsc-ember-cli@0.1.8 compile script 'tsc && node ./node_modules/vscode/bin/compile -watch -p ./'.
+23 error This is most likely a problem with the vsc-ember-cli package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     tsc && node ./node_modules/vscode/bin/compile -watch -p ./
+23 error You can get their info via:
+23 error     npm owner ls vsc-ember-cli
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

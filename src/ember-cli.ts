@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 
 import { ignoreItems, jsConfig } from "./constants";
 import { appendVSCIgnore, appendJSConfig } from "./file-ops";
-import { emberOperationResult, EmberOperation } from "./ember-ops";
+import { EmberOperationResult, EmberOperation } from "./ember-ops";
 import { capitalizeFirstLetter } from "./helpers";
 import DumbCache from "./dumb-cache";
 
@@ -20,7 +20,7 @@ export class EmberCliManager {
             isOutputChannelVisible: false
         });
 
-        addonOps.run().then((result: emberOperationResult) => {
+        addonOps.run().then((result: EmberOperationResult) => {
             if (result && result.code === 0) {
                 window.showInformationMessage("Addon folder structure created!");
             } else {
@@ -34,7 +34,7 @@ export class EmberCliManager {
         let versionOps = new EmberOperation("version", {
             isOutputChannelVisible: false
         });
-        versionOps.run().then((result: emberOperationResult) => {
+        versionOps.run().then((result: EmberOperationResult) => {
             if (result.code === 0) {
                 window.showInformationMessage("Ember Cli " + result.stdout);
             }
@@ -97,7 +97,7 @@ export class EmberCliManager {
 
             let envarg = (result.label === "description") ? "-dev" : "-prod";
             let buildOp = new EmberOperation(["build", envarg]);
-            buildOp.run().then((result: emberOperationResult) => {
+            buildOp.run().then((result: EmberOperationResult) => {
                 if (result.code === 0) {
                     window.showInformationMessage("Project successfully built!");
                 }
@@ -192,7 +192,7 @@ export class EmberCliManager {
                 let blueprintOp = new EmberOperation([type, result.label, generateArgs], {
                     isOutputChannelVisible: false
                 });
-                blueprintOp.run().then((result: emberOperationResult) => {
+                blueprintOp.run().then((result: EmberOperationResult) => {
                     if (result.code === 0) {
                         let message = `${gdName} sucessfully ${(type === "generate") ? "generated" : "destroyed"}!`;
                         window.showInformationMessage(message);
@@ -205,7 +205,7 @@ export class EmberCliManager {
     // ember test
     public test() {
         let testOp = new EmberOperation(["test"]);
-        testOp.run().then((result: emberOperationResult) => {
+        testOp.run().then((result: EmberOperationResult) => {
             if (result && result.code === 0) {
                 window.showInformationMessage("Tests passed with code " + result.code);
             } else {
