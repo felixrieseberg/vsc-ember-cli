@@ -1,3 +1,5 @@
+"use strict";
+
 import { EmberOperation, getHelp } from "./ember-ops";
 
 export default class DumbCache {

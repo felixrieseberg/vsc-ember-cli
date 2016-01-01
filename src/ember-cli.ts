@@ -1,3 +1,5 @@
+"use strict";
+
 import { window, commands, workspace } from "vscode";
 import * as vscode from "vscode";
 
@@ -173,9 +175,10 @@ export class EmberCliManager {
             let optionPromises = [];
             let optionResults = [];
             let gdName;
+            let i = 0;
 
             if (result.anonymousOptions && result.anonymousOptions.length > 0) {
-                for (let i = 0; i < result.anonymousOptions.length; i++) {
+                for (i = 0; i < result.anonymousOptions.length; i++) {
                     let name = result.anonymousOptions[i];
 
                     optionPromises.push(window.showInputBox({
