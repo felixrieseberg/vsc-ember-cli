@@ -2,6 +2,7 @@
 
 import { window, commands, workspace, OutputChannel } from "vscode";
 import * as cp from "child_process";
+import * as os from "os";
 
 import { capitalizeFirstLetter } from "./helpers";
 
@@ -58,14 +59,26 @@ export class EmberOperation {
             }
 
             let lastOut = "";
+            let debugEnabled = process.env.VSC_EMBER_CLI_DEBUG || process.env["VSC EMBER CLI DEBUG"];
 
             this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
 
-            this._process = this._spawn("ember", this.cmd, {
-                cwd: workspace.rootPath
-            });
+            // On Windows, we'll have to call Ember with PowerShell
+            // https://github.com/nodejs/node-v0.x-archive/issues/2318
+            if (os.platform() === "win32") {
+                let joinedArgs = this.cmd;
+                joinedArgs.unshift("ember");
 
-            if (this._isOutputChannelVisible || process.env.VSC_EMBER_CLI_DEBUG) {
+                this._process = this._spawn("powershell.exe", joinedArgs, {
+                    cwd: workspace.rootPath
+                });
+            } else {
+                this._process = this._spawn("ember", this.cmd, {
+                    cwd: workspace.rootPath
+                });
+            }
+
+            if (this._isOutputChannelVisible || debugEnabled) {
                 this._isOutputChannelVisible = true;
                 this._oc.show();
             }
