@@ -151,13 +151,9 @@ export function isEmberCliInstalled(): boolean {
 export function getHelp(cmd: string): any {
     return new Promise((resolve, reject) => {
         try {
-            let exec = cp.execSync(`ember ${cmd} --help --json`);
-            let result = exec.toString();
-
-            // Clean input
-            let jsonStart = result.indexOf("{");
-            result = (jsonStart > 0) ? result.slice(jsonStart) : result;
-            result = JSON.parse(result);
+            let exec = cp.execSync(`ember --help --json`);
+            let execOutput = exec.toString();
+            let result = parseHelp(cmd, execOutput);
 
             resolve(result);
         } catch (e) {
@@ -170,4 +166,24 @@ export function getHelp(cmd: string): any {
             reject(e);
         }
     });
+}
+
+function parseHelp(cmd: string, output: any): any {
+    if (!output || !cmd) {
+        return null;
+    }
+
+    // Clean input
+    let jsonIndex: number = output.indexOf("{");
+    let cleanedOutput: string = (jsonIndex > 0) ? output.slice(jsonIndex) : output;
+    let help = JSON.parse(cleanedOutput);
+    let cmdHelp: Object = null;
+
+    if (help && help.commands) {
+        cmdHelp = help.commands.find((item) => {
+           return (item && item.name && item.name === cmd);
+        });
+    }
+
+    return cmdHelp;
 }

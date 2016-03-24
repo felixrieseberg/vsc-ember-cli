@@ -20,8 +20,8 @@ export default class DumbCache {
     private _preloadGenerateChoices(): Promise<any> {
         return new Promise((resolve, reject) => {
             getHelp("generate").then((result) => {
-                if (result && result.commands) {
-                    this.generateChoices = result.commands[0].availableBlueprints[0]["ember-cli"];
+                if (result && result.availableBlueprints) {
+                    this.generateChoices = result.availableBlueprints[0]["ember-cli"];
                     resolve();
                 } else {
                     // Todo: Handle this
