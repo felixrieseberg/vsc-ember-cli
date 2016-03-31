@@ -97,7 +97,7 @@ export class EmberCliManager {
                 return;
             };
 
-            let envarg = (result.label === "description") ? "-dev" : "-prod";
+            let envarg = (result.label === "development") ? "-dev" : "-prod";
             let buildOp = new EmberOperation(["build", envarg]);
             buildOp.run().then((result: EmberOperationResult) => {
                 if (result.code === 0) {
