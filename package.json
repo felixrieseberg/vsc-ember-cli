@@ -101,11 +101,15 @@
       {
         "command": "extension.testServer",
         "title": "Ember: Test Server (Start, Stop, Restart)"
+      },
+      {
+        "command": "extension.installTypings",
+        "title": "Ember: Install Typings"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "tsc && node ./node_modules/vscode/bin/compile",
+    "vscode:prepublish": "5",
     "compile": "tsc && node ./node_modules/vscode/bin/compile -watch -p ./",
     "test": "tslint ./src/*"
   },
@@ -115,6 +119,7 @@
     "vscode": "^0.10.6"
   },
   "dependencies": {
+    "fs-extra": "^0.26.7",
     "merge": "^1.2.0",
     "path-exists": "^2.1.0"
   }

@@ -18,9 +18,7 @@ export function appendJSConfig(data): boolean {
     }
 
     let jscPath = path.join(workspace.rootPath, "jsconfig.json");
-    let newJsc;
-    let mergedJsc;
-    let currentJsc;
+    let newJsc, mergedJsc, currentJsc;
 
     // Check first if a jsconfig.json exists
     if (pathExists.sync(jscPath)) {
@@ -42,14 +40,6 @@ export function appendJSConfig(data): boolean {
     }
 }
 
-export function hasJSConfig(): boolean {
-    if (!workspace || !workspace.rootPath) {
-        return false;
-    }
-
-    return pathExists.sync(path.join(workspace.rootPath, "jsconfig.json"));
-}
-
 // Appends the current project"s .vscodeignore file with additional items
 export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
     if (!ignoreItems || ignoreItems.length === 0 || !workspace || !workspace.rootPath) {
@@ -63,7 +53,7 @@ export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
     // which items we have to fill in
     if (pathExists.sync(vsciPath)) {
         let vsciBuffer = fs.readFileSync(vsciPath);
-        let    vsciContent = vsciBuffer.toString().split(/\r?\n/);
+        let vsciContent = vsciBuffer.toString().split(/\r?\n/);
 
         // If there"s anything in that file, we"ll need to add a newline
         if (vsciContent.length > 0) {
@@ -79,7 +69,7 @@ export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
         }
     }
 
-    // Now, let"s append the .vscodeignore
+    // Now, let's append the .vscodeignore
     let ignoreContent = ignoreItems.join(eol);
 
     try {
@@ -88,4 +78,20 @@ export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
     } catch (e) {
         return false;
     }
+}
+
+export function hasJSConfig(): boolean {
+    return hasFile("jsconfig.json");
+}
+
+export function hasVCSIgnore(): boolean {
+    return hasFile(".vscodeignore");
+}
+
+export function hasFile(file: string): boolean {
+    if (!workspace || !workspace.rootPath) {
+        return false;
+    }
+
+    return pathExists.sync(path.join(workspace.rootPath, file));
 }

@@ -3,8 +3,9 @@
 import { window, commands, workspace, OutputChannel } from "vscode";
 import * as cp from "child_process";
 import * as os from "os";
+import * as path from "path";
 
-import { capitalizeFirstLetter } from "./helpers";
+import { capitalizeFirstLetter, semver } from "./helpers";
 
 export interface EmberOperationResult {
     code: Number;
@@ -148,6 +149,36 @@ export function isEmberCliInstalled(): boolean {
     }
 }
 
+export function getEmberVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let bower;
+
+        if (!workspace || !workspace.rootPath) {
+            return reject(new Error("Could not determine Ember version: Workspace not available."));
+        }
+
+        // Try go require the bower.json
+        try {
+            bower = require(path.join(workspace.rootPath, "bower.json"));
+        } catch (error) {
+            return reject(new Error("Could not determine Ember version: Bower.json not found."));
+        }
+
+        // Attempt to get to the ember version
+        if (bower && bower.dependencies && bower.dependencies.ember) {
+            let version = semver().exec(bower.dependencies.ember);
+
+            if (version && version[0]) {
+                resolve(version[0]);
+            } else {
+                return reject(new Error("Could not determine Ember version: Ember version not recognized."));
+            }
+        } else {
+            return reject(new Error("Could not determine Ember version: Ember not a bower dependency."));
+        }
+    });
+}
+
 export function getHelp(cmd: string): any {
     return new Promise((resolve, reject) => {
         try {
@@ -159,7 +190,7 @@ export function getHelp(cmd: string): any {
         } catch (e) {
             if (cmd === "generate") {
                 // For generate, let"s use our fallback
-                let generateFallback = require("../../json/generate.json");
+                let generateFallback = require("../../resources/json/generate.json");
                 return resolve(generateFallback);
             }
 
