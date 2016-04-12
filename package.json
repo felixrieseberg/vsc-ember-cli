@@ -2,7 +2,7 @@
   "name": "vsc-ember-cli",
   "displayName": "Ember Cli in Visual Studio Code",
   "description": "Turn Visual Studio Code into an Ember Cli IDE",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "felixrieseberg",
   "engines": {
     "vscode": "^0.10.0"
