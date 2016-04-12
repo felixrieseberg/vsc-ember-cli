@@ -1,5 +1,5 @@
 .vscode/**
-typings/**
+./typings/**
 out/test/**
 test/**
 **/*.ts
@@ -18,3 +18,4 @@ coverage/*/**
 libpeerconnection.log
 node_modules/typescript/**
 node_modules/tslint/**
+!resources/typings/**/*
