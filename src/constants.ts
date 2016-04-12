@@ -17,8 +17,16 @@ export const ignoreItems = [
 ];
 
 export const jsConfig = {
-  "compilerOptions": {
-    "target": "es6",
-    "experimentalDecorators": true
-  }
+    "compilerOptions": {
+        "target": "es6",
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules",
+        "bower_components",
+        "tmp",
+        "vendor",
+        ".git",
+        "dist"
+    ]
 };

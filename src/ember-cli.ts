@@ -5,6 +5,7 @@ import * as vscode from "vscode";
 
 import { ignoreItems, jsConfig } from "./constants";
 import { appendVSCIgnore, appendJSConfig } from "./file-ops";
+import { installTypings } from "./typing-ops";
 import { EmberOperationResult, EmberOperation } from "./ember-ops";
 import { capitalizeFirstLetter } from "./helpers";
 import DumbCache from "./dumb-cache";
@@ -16,18 +17,27 @@ export class EmberCliManager {
         this._cache = new DumbCache({ preload: true });
     }
 
+    /**
+     * All the methods below map 1:1 to an ember-cli operation
+     * Each command should just invoke the ember cli command,
+     * except in cases where we want the user to enter more input,
+     * or when we want to "massage" the command.
+     */
+
     // ember addon
     public addon() {
         let addonOps = new EmberOperation("addon", {
             isOutputChannelVisible: false
         });
 
-        addonOps.run().then((result: EmberOperationResult) => {
-            if (result && result.code === 0) {
-                window.showInformationMessage("Addon folder structure created!");
-            } else {
-                window.showErrorMessage("Addon folder structure creation failed.");
-            }
+        addonOps
+            .run()
+            .then((result: EmberOperationResult) => {
+                if (result && result.code === 0) {
+                    window.showInformationMessage("Addon folder structure created!");
+                } else {
+                    window.showErrorMessage("Addon folder structure creation failed.");
+                }
         });
     }
 
@@ -36,11 +46,13 @@ export class EmberCliManager {
         let versionOps = new EmberOperation("version", {
             isOutputChannelVisible: false
         });
-        versionOps.run().then((result: EmberOperationResult) => {
-            if (result.code === 0) {
-                window.showInformationMessage("Ember Cli " + result.stdout);
-            }
-        });
+        versionOps
+            .run()
+            .then((result: EmberOperationResult) => {
+                if (result.code === 0) {
+                    window.showInformationMessage("Ember Cli " + result.stdout);
+                }
+            });
     }
 
     // ember install
@@ -256,6 +268,11 @@ export class EmberCliManager {
         }
     }
 
+    // Install Ember Typings
+    public installTypings() {
+        return installTypings();
+    }
+
     /*
     // Helper Functions
     */
@@ -278,5 +295,6 @@ export class EmberCliManager {
 
         appendVSCIgnore(ignoreItems);
         appendJSConfig(jsConfig);
+        installTypings();
     }
 }

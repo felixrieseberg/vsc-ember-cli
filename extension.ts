@@ -7,13 +7,7 @@ var emberManager : embercli.EmberCliManager;
 var installed : boolean = false;
 
 export function activate() {
-	workspace.findFiles('.ember-cli', '', 1).then((result) => {
-		if (!fileOps.hasJSConfig()) {
-			execute('setupProject');
-		} else {
-			execute();
-		}
-	});
+    execute('setupProject');
 	
 	// Register Commands
 	commands.registerCommand('extension.addon', () => execute('addon'));
@@ -28,6 +22,7 @@ export function activate() {
 	commands.registerCommand('extension.version', () => execute('version'));
 	commands.registerCommand('extension.test', () => execute('test'));
 	commands.registerCommand('extension.testServer', () => execute('testServer'));
+    commands.registerCommand('extension.installTypings', () => execute('installTypings'));
 }
 
 function execute(cmd? : string, arg? : Array<any>) {
