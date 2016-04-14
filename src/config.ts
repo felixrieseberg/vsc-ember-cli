@@ -10,7 +10,7 @@ const pathExists = require("path-exists");
 export function readSetting(key): any {
     let config = getConfig();
 
-    if (config && config[key]) {
+    if (config) {
         return config[key];
     } else {
         return null;
@@ -43,7 +43,7 @@ export function writeSetting(data) {
 function getConfig() {
     let config;
 
-    if (!workspace || workspace.rootPath) return null;
+    if (!workspace || !workspace.rootPath) return null;
 
     try {
         config = require(configPath);
@@ -54,7 +54,7 @@ function getConfig() {
 }
 
 function createConfig(): boolean {
-    if (!workspace || workspace.rootPath) return null;
+    if (!workspace || !workspace.rootPath) return null;
 
     try {
         fs.ensureFileSync(configPath);
