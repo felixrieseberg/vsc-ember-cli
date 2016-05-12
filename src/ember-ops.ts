@@ -108,9 +108,6 @@ export class EmberOperation {
 
             this._process.on("close", (code) => {
                 this._oc.appendLine(`Ember ${this.cmd[0]} process exited with code ${code}`);
-                if (this._isOutputChannelVisible) {
-                    this._oc.hide();
-                }
 
                 resolve(<EmberOperationResult>{
                     code: parseInt(code),
