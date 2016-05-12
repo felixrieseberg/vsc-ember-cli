@@ -63,7 +63,7 @@ export class EmberOperation {
             let debugEnabled = process.env.VSC_EMBER_CLI_DEBUG || process.env["VSC EMBER CLI DEBUG"];
 
             this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
-
+            
             // On Windows, we'll have to call Ember with PowerShell
             // https://github.com/nodejs/node-v0.x-archive/issues/2318
             if (os.platform() === "win32") {
@@ -71,7 +71,8 @@ export class EmberOperation {
                 joinedArgs.unshift("ember");
 
                 this._process = this._spawn("powershell.exe", joinedArgs, {
-                    cwd: workspace.rootPath
+                    cwd: workspace.rootPath,
+                    stdio: ['ignore', 'pipe', 'pipe' ]
                 });
             } else {
                 this._process = this._spawn("ember", this.cmd, {
