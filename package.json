@@ -5,7 +5,7 @@
   "version": "0.2.3",
   "publisher": "felixrieseberg",
   "engines": {
-    "vscode": "^0.10.0"
+    "vscode": "^1.1.0"
   },
   "license": "MIT",
   "categories": [
@@ -109,6 +109,7 @@
     ]
   },
   "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
     "vscode:prepublish": "tsc && node ./node_modules/vscode/bin/compile",
     "compile": "tsc && node ./node_modules/vscode/bin/compile -watch -p ./",
     "test": "tslint ./src/*"
@@ -116,7 +117,7 @@
   "devDependencies": {
     "tslint": "^3.2.0",
     "typescript": "^1.7.3",
-    "vscode": "^0.10.6"
+    "vscode": "^0.11.12"
   },
   "dependencies": {
     "fs-extra": "^0.26.7",
