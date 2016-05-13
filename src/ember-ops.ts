@@ -79,6 +79,7 @@ export class EmberOperation {
                     cwd: workspace.rootPath
                 });
             }
+            this._oc.appendLine("Building...");
 
             if (this._isOutputChannelVisible || debugEnabled) {
                 this._isOutputChannelVisible = true;
