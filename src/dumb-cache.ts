@@ -21,7 +21,14 @@ export default class DumbCache {
         return new Promise((resolve, reject) => {
             getHelp("generate").then((result) => {
                 if (result && result.availableBlueprints) {
-                    this.generateChoices = result.availableBlueprints[0]["ember-cli"];
+                    this.generateChoices = result.availableBlueprints.reduce((allChoices, currentChoices) => {
+                        const newOptions = [];
+                        Object.keys(currentChoices).forEach((choiceSource) => {
+                            newOptions.push(...currentChoices[choiceSource]);
+                        });
+
+                        return [...allChoices, ...newOptions];
+                    }, []);
                     resolve();
                 } else {
                     // Todo: Handle this
