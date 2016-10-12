@@ -177,8 +177,7 @@ export class EmberCliManager {
         });
 
         window.showQuickPick(qpChoices, {
-            placeHolder: `Which blueprint do you want to ${type}?`,
-            matchOnDescription: true
+            placeHolder: `Which blueprint do you want to ${type}?`
         }).then((result: any) => {
             if (!result) {
                 return;
