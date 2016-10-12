@@ -5,6 +5,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 import { jsConfig } from "./constants";
+import { getFullAppPath } from "./config";
 
 // Generic imports
 const pathExists = require("path-exists");
@@ -17,7 +18,7 @@ export function appendJSConfig(data): boolean {
         return false;
     }
 
-    let jscPath = path.join(workspace.rootPath, "jsconfig.json");
+    let jscPath = path.join(getFullAppPath(), "jsconfig.json");
     let newJsc, mergedJsc, currentJsc;
 
     // Check first if a jsconfig.json exists
@@ -46,7 +47,7 @@ export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
         return false;
     }
 
-    let vsciPath = path.join(workspace.rootPath, ".vscodeignore");
+    let vsciPath = path.join(getFullAppPath(), ".vscodeignore");
     let eol = EOL || (process.platform === "win32" ? "\r\n" : "\n");
 
     // Let"s first see if the file already exists - and if so,
@@ -80,18 +81,10 @@ export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
     }
 }
 
-export function hasJSConfig(): boolean {
-    return hasFile("jsconfig.json");
-}
-
-export function hasVCSIgnore(): boolean {
-    return hasFile(".vscodeignore");
-}
-
 export function hasFile(file: string): boolean {
     if (!workspace || !workspace.rootPath) {
         return false;
     }
 
-    return pathExists.sync(path.join(workspace.rootPath, file));
+    return pathExists.sync(path.join(getFullAppPath(), file));
 }
