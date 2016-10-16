@@ -1,26 +1,25 @@
-"use strict";
-
 import { getEmberVersion } from "./ember-ops";
 import { hasFile } from "./file-ops";
 import { readSetting } from "./config";
 
-import { window, commands, workspace } from "vscode";
-import * as vscode from "vscode";
+import { workspace } from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
 
 const pathExists = require("path-exists");
 
-export function installTypings(): Promise<Boolean> {
+export function installTypings(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-        if (!shouldInstallTypings()) return resolve();
+        if (!shouldInstallTypings()) {
+            return resolve();
+        }
 
         return getEmberVersion()
             .then((version) => installTypingsForVersion(version));
     });
 }
 
-function installTypingsForVersion(version: string): Promise<Boolean> {
+function installTypingsForVersion(version: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
         let typingsFolder = path.join(workspace.rootPath, "typings", "ember");
         let versionTypings = path.join(__dirname, "..", "..", "resources", "typings", `v${version}`, "ember.d.ts");
@@ -33,11 +32,15 @@ function installTypingsForVersion(version: string): Promise<Boolean> {
 
             // Ensure the target folder exists
             fs.ensureDir(typingsFolder, (err) => {
-                if (err) return reject();
+                if (err) {
+                    return reject();
+                }
 
                 // Then, copy it over
                 fs.copy(typings, path.join(typingsFolder, "ember.d.ts"), (err) => {
-                    if (err) return reject();
+                    if (err) {
+                        return reject();
+                    }
 
                     resolve();
                 });
@@ -49,7 +52,6 @@ function installTypingsForVersion(version: string): Promise<Boolean> {
 function shouldInstallTypings(): boolean {
     let setting = readSetting("installTypings");
     let hasTypings = hasEmberTypings();
-    let path = workspace.rootPath;
 
     if (!workspace || !workspace.rootPath || setting === false || hasTypings) {
         return false;

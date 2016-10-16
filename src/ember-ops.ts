@@ -1,6 +1,4 @@
-"use strict";
-
-import { window, commands, workspace, OutputChannel } from "vscode";
+import { window, workspace, OutputChannel } from "vscode";
 import * as cp from "child_process";
 import * as os from "os";
 import * as path from "path";

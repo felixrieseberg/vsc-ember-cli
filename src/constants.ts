@@ -1,5 +1,3 @@
-"use strict";
-
 export const ignoreItems = [
     // compiled output
     "dist/**",
