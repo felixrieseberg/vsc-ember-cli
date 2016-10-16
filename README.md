@@ -28,6 +28,22 @@ Use Ember and Ember Cli directly from Visual Studio Code. After installation, al
 ## Install
 In Visual Studio Code, run `ext install vsc-ember-cli` - or, simply hit `CMD/CTRL + Shift + P`, search for "Install Extension", and then search for "ember cli".
 
+### Usage in subfolder
+If you're Ember app is within a subfolder of your workspace, you have to create an `ember.json` file in the `.vscode` folder of your workspace.
+If the `.vscode` folder doesn't exist yet, you also have to create it.
+After that you have to to add a config that specifies the folder in which the Ember app resides.
+
+Example:
+
+```json
+{
+  "appPath": "./ember-app"
+}
+```
+
+The addon will do the regular setup (like creating a `jsconfig.json`) as soon as the first command is executed.  
+Tip: There is a command to setup the project for Visual Studio Code.
+
 ## IntelliSense Support
 Support is experimental - IntelliSense is enabled with typings, which are automatically installed in a `typings` folder inside your project. The typings file should be automatically detected, but if not, you can either add it to your project's [`jsconfig.json`](https://code.visualstudio.com/Docs/languages/javascript#_javascript-projects-jsconfigjson), or add a `/// reference` to the typings in individual files.
 

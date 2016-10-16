@@ -4,6 +4,7 @@ import * as os from "os";
 import * as path from "path";
 
 import { capitalizeFirstLetter, semver } from "./helpers";
+import { getFullAppPath } from "./config";
 
 export interface EmberOperationResult {
     code: Number;
@@ -69,12 +70,12 @@ export class EmberOperation {
                 joinedArgs.unshift("ember");
 
                 this._process = this._spawn("powershell.exe", joinedArgs, {
-                    cwd: workspace.rootPath,
+                    cwd: getFullAppPath(),
                     stdio: ["ignore", "pipe", "pipe" ]
                 });
             } else {
                 this._process = this._spawn("ember", this.cmd, {
-                    cwd: workspace.rootPath
+                    cwd: getFullAppPath()
                 });
             }
             this._oc.appendLine("Building...");
@@ -156,7 +157,7 @@ export function getEmberVersion(): Promise<string> {
 
         // Try go require the bower.json
         try {
-            bower = require(path.join(workspace.rootPath, "bower.json"));
+            bower = require(path.join(getFullAppPath(), "bower.json"));
         } catch (error) {
             return reject(new Error("Could not determine Ember version: Bower.json not found."));
         }

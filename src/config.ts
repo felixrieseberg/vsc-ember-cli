@@ -53,3 +53,8 @@ function getConfig() {
         return null;
     }
 }
+
+export function getFullAppPath(): string {
+    const appPath = readSetting("appPath") || "./";
+    return path.join(workspace.rootPath, appPath);
+}
