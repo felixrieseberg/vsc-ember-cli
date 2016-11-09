@@ -29,9 +29,9 @@ Use Ember and Ember Cli directly from Visual Studio Code. After installation, al
 In Visual Studio Code, run `ext install vsc-ember-cli` - or, simply hit `CMD/CTRL + Shift + P`, search for "Install Extension", and then search for "ember cli".
 
 ### Usage in subfolder
-If you're Ember app is within a subfolder of your workspace, you have to create an `ember.json` file in the `.vscode` folder of your workspace.
+If your Ember app is within a subfolder of your workspace, you have to create an `ember.json` file in the `.vscode` folder of your workspace.
 If the `.vscode` folder doesn't exist yet, you also have to create it.
-After that you have to to add a config that specifies the folder in which the Ember app resides.
+After that you have to add a config that specifies the folder in which the Ember app resides.
 
 Example:
 
