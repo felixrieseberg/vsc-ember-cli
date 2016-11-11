@@ -1,5 +1,4 @@
-import { window, commands, workspace } from "vscode";
-import * as vscode from "vscode";
+import { workspace } from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
 
@@ -7,7 +6,7 @@ const configPath = path.join(workspace.rootPath, ".vscode", "ember.json");
 const merge = require("merge");
 const pathExists = require("path-exists");
 
-export function readSetting(key): any {
+export function readSetting(key: string): any {
     let config = getConfig();
 
     if (config) {
@@ -43,24 +42,15 @@ export function writeSetting(data) {
 function getConfig() {
     let config;
 
-    if (!workspace || !workspace.rootPath) return null;
+    if (!workspace || !workspace.rootPath) {
+        return null;
+    }
 
     try {
         config = require(configPath);
         return config;
     } catch (err) {
         return null;
-    }
-}
-
-function createConfig(): boolean {
-    if (!workspace || !workspace.rootPath) return null;
-
-    try {
-        fs.ensureFileSync(configPath);
-        return true;
-    } catch (err) {
-        return false;
     }
 }
 

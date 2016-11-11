@@ -1,5 +1,3 @@
-"use strict";
-
 import { EmberOperation, getHelp } from "./ember-ops";
 
 export default class DumbCache {
@@ -11,7 +9,7 @@ export default class DumbCache {
         return this._preloadGenerateChoices();
     }
 
-    constructor(options = { preload: false}) {
+    constructor(options = { preload: false }) {
         if (options.preload) {
             this.preload();
         }

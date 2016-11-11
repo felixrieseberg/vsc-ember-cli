@@ -1,7 +1,4 @@
-"use strict";
-
-import { window, commands, workspace } from "vscode";
-import * as vscode from "vscode";
+import { window, workspace, QuickPickItem } from "vscode";
 
 import { ignoreItems, jsConfig } from "./constants";
 import { appendVSCIgnore, appendJSConfig } from "./file-ops";
@@ -93,7 +90,7 @@ export class EmberCliManager {
 
     // ember build
     public build() {
-        let quickPickItems: Array<vscode.QuickPickItem> = [
+        let quickPickItems: Array<QuickPickItem> = [
             {
                 label: "development",
                 description: "Build with env=development"
@@ -122,7 +119,7 @@ export class EmberCliManager {
     // ember serve
     public serve() {
         if (this._cache.serveOperation) {
-            let quickPickItems: Array<vscode.QuickPickItem> = [
+            let quickPickItems: Array<QuickPickItem> = [
                 {
                     label: "Show Output",
                     description: "Display the Ember Serve Task Output"
@@ -167,7 +164,7 @@ export class EmberCliManager {
             return;
         };
 
-        let qpChoices: Array<vscode.QuickPickItem> = this._cache.generateChoices.map((element) => {
+        let qpChoices: Array<QuickPickItem> = this._cache.generateChoices.map((element) => {
             return {
                 label: element.name,
                 description: element.description,
@@ -231,7 +228,7 @@ export class EmberCliManager {
     // ember test (server)
     public testServer() {
         if (this._cache.testServeOperation) {
-            let quickPickItems: Array<vscode.QuickPickItem> = [
+            let quickPickItems: Array<QuickPickItem> = [
                 {
                     label: "Restart",
                     description: "Restart the serve process"

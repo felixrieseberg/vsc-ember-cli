@@ -1,5 +1,3 @@
-"use strict";
-
 import { workspace } from "vscode";
 import * as fs from "fs";
 import * as path from "path";
@@ -42,7 +40,7 @@ export function appendJSConfig(data): boolean {
 }
 
 // Appends the current project"s .vscodeignore file with additional items
-export function appendVSCIgnore(ignoreItems: Array<string>): Boolean {
+export function appendVSCIgnore(ignoreItems: Array<string>): boolean {
     if (!ignoreItems || ignoreItems.length === 0 || !workspace || !workspace.rootPath) {
         return false;
     }
