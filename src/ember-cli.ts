@@ -1,7 +1,7 @@
 import { window, workspace, QuickPickItem } from "vscode";
 
-import { ignoreItems, jsConfig } from "./constants";
-import { appendVSCIgnore, appendJSConfig } from "./file-ops";
+import { jsConfig } from "./constants";
+import { appendJSConfig } from "./file-ops";
 import { installTypings } from "./typing-ops";
 import { EmberOperationResult, EmberOperation } from "./ember-ops";
 import { capitalizeFirstLetter } from "./helpers";
@@ -289,7 +289,6 @@ export class EmberCliManager {
             return false;
         }
 
-        appendVSCIgnore(ignoreItems);
         appendJSConfig(jsConfig);
         installTypings();
     }

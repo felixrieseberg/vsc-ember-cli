@@ -6,4 +6,6 @@
 	"search.exclude": {
 		"out": true
 	}
+,
+"eslint.enable": false
 }
