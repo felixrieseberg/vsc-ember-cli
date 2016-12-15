@@ -58,3 +58,15 @@ export function getFullAppPath(): string {
     const appPath = readSetting("appPath") || "./";
     return path.join(workspace.rootPath, appPath);
 }
+
+export function getPathToEmberBin(): string {
+    const appPath = getFullAppPath();
+    const localEmber = path.join(appPath, "node_modules/.bin/ember");
+
+    try {
+        const stats = fs.statSync(localEmber);
+        return stats ? localEmber : "ember";
+    } catch (error) {
+        return "ember";
+    }
+}
