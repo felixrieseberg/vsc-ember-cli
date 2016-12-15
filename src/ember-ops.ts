@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 
 import { capitalizeFirstLetter, semver } from "./helpers";
-import { getFullAppPath } from "./config";
+import { getFullAppPath, getPathToEmberBin } from "./config";
 
 export interface EmberOperationResult {
     code: Number;
@@ -60,6 +60,7 @@ export class EmberOperation {
 
             let lastOut = "";
             let debugEnabled = process.env.VSC_EMBER_CLI_DEBUG || process.env["VSC EMBER CLI DEBUG"];
+            let emberPath = getPathToEmberBin();
 
             this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
 
@@ -67,14 +68,14 @@ export class EmberOperation {
             // https://github.com/nodejs/node-v0.x-archive/issues/2318
             if (os.platform() === "win32") {
                 let joinedArgs = this.cmd;
-                joinedArgs.unshift("ember");
+                joinedArgs.unshift(emberPath);
 
                 this._process = this._spawn("powershell.exe", joinedArgs, {
                     cwd: getFullAppPath(),
                     stdio: ["ignore", "pipe", "pipe" ]
                 });
             } else {
-                this._process = this._spawn("ember", this.cmd, {
+                this._process = this._spawn(emberPath, this.cmd, {
                     cwd: getFullAppPath()
                 });
             }
@@ -135,14 +136,20 @@ export class EmberOperation {
 }
 
 export function isEmberCliInstalled(): boolean {
+    let emberBin = getPathToEmberBin();
+
     try {
-        let exec = cp.execSync("ember -v");
+        let exec = cp.execSync(`${emberBin} -v`, {
+            cwd: getFullAppPath()
+        });
 
         console.log("Ember is apparently installed");
         console.log(exec.toString());
 
         return true;
     } catch (e) {
+        debugger;
+
         return false;
     }
 }
