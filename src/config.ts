@@ -61,5 +61,12 @@ export function getFullAppPath(): string {
 
 export function getPathToEmberBin(): string {
     const appPath = getFullAppPath();
-    return path.join(appPath, "node_modules/.bin/ember");
+    const localEmber = path.join(appPath, "node_modules/.bin/ember");
+
+    try {
+        const stats = fs.statSync(localEmber);
+        return stats ? localEmber : "ember";
+    } catch (error) {
+        return "ember";
+    }
 }
