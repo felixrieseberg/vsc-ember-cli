@@ -97,21 +97,22 @@ export class EmberOperation {
                     return this._oc.append(".");
                 }
 
-                this._oc.appendLine(data);
-                this._stdout.push(data);
+                this._oc.appendLine(out);
+                this._stdout.push(out);
                 lastOut = out;
             });
 
             this._process.stderr.on("data", (data) => {
-                this._oc.appendLine(data);
-                this._stderr.push(data);
+				let out = data.toString();
+                this._oc.appendLine(out);
+                this._stderr.push(out);
             });
 
             this._process.on("close", (code) => {
                 this._oc.appendLine(`Ember ${this.cmd[0]} process exited with code ${code}`);
 
                 resolve(<EmberOperationResult>{
-                    code: parseInt(code),
+                    code: code,
                     stderr: this._stderr,
                     stdout: this._stdout
                 });
