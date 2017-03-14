@@ -110,11 +110,14 @@
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "vscode:prepublish": "tsc && node ./node_modules/vscode/bin/compile",
-    "compile": "tsc && node ./node_modules/vscode/bin/compile -watch -p ./",
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
     "test": "tslint ./src/*"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.8",
+    "mocha": "^3.2.0",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1",
     "vscode": "^1.0.5"
