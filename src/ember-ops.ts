@@ -151,7 +151,7 @@ function getEmberVersionDump(): string {
     let emberBin = getPathToEmberBin();
 
     try {
-        let exec = cp.execSync(`"${emberBin}" -v`, {
+        let exec = cp.execSync(`${emberBin} -v`, {
             cwd: getFullAppPath()
         });
 
