@@ -8,20 +8,20 @@ import * as fs from "fs-extra";
 
 const pathExists = require("path-exists");
 
-export function installTypings(): Promise<boolean> {
+export function installTypings(filePath = ""): Promise<boolean> {
     return new Promise((resolve, reject) => {
         if (!shouldInstallTypings()) {
             return resolve();
         }
 
         return getEmberVersion()
-            .then((version) => installTypingsForVersion(version));
+            .then((version) => installTypingsForVersion(version, filePath));
     });
 }
 
-function installTypingsForVersion(version: string): Promise<boolean> {
+function installTypingsForVersion(version: string, filePath = ""): Promise<boolean> {
     return new Promise((resolve, reject) => {
-        let typingsFolder = path.join(workspace.rootPath, "typings", "ember");
+        let typingsFolder = path.join(workspace.rootPath, filePath, "typings", "ember");
         let versionTypings = path.join(__dirname, "..", "..", "resources", "typings", `v${version}`, "ember.d.ts");
         let lastTypings = path.join(__dirname, "..", "..", "resources", "typings", "v2.4.4", "ember.d.ts");
         let typings;

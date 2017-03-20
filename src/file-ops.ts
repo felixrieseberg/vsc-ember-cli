@@ -10,12 +10,12 @@ const pathExists = require("path-exists");
 const merge = require("merge");
 
 // Merges or overwrites settings in jsconfig.json
-export function appendJSConfig(data): boolean {
+export function appendJSConfig(data, filepath = ""): boolean {
     if (!workspace || !workspace.rootPath) {
         return false;
     }
 
-    let jscPath = path.join(getFullAppPath(), "jsconfig.json");
+    let jscPath = path.join(getFullAppPath(), filepath, "jsconfig.json");
     let newJsc, mergedJsc, currentJsc;
 
     // Check first if a jsconfig.json exists
