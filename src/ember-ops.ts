@@ -1,6 +1,5 @@
 import { window, workspace, OutputChannel } from "vscode";
 import * as cp from "child_process";
-import * as os from "os";
 import * as path from "path";
 
 import { capitalizeFirstLetter, semver, versionDumpParse } from "./helpers";
@@ -15,7 +14,6 @@ export interface EmberOperationResult {
 }
 
 export class EmberOperation {
-    private _spawn = cp.spawn;
     private _oc: OutputChannel;
     private _process: cp.ChildProcess;
     private _isOutputChannelVisible: boolean;
@@ -66,21 +64,10 @@ export class EmberOperation {
 
             this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
 
-            // On Windows, we'll have to call Ember with PowerShell
-            // https://github.com/nodejs/node-v0.x-archive/issues/2318
-            if (os.platform() === "win32") {
-                let joinedArgs = this.cmd;
-                joinedArgs.unshift(emberPath);
+            this._process = spawn(emberPath, this.cmd, {
+                cwd: getFullAppPath()
+            });
 
-                this._process = this._spawn("powershell.exe", joinedArgs, {
-                    cwd: getFullAppPath(),
-                    stdio: ["ignore", "pipe", "pipe"]
-                });
-            } else {
-                this._process = this._spawn(emberPath, this.cmd, {
-                    cwd: getFullAppPath()
-                });
-            }
             this._oc.appendLine("Building...");
 
             if (this._isOutputChannelVisible || debugEnabled) {

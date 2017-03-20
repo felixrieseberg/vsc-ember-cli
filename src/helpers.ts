@@ -18,12 +18,3 @@ export function semver() {
 export function versionDumpParse(): RegExp {
     return /ember-cli:\s*(.*)\s*\nnode:\s(.*)\s*\nos:\s*(.*)/ig;
 }
-
-/**
- * lowercase and replace spaces with hyphens
- * @param str 
- */
-export function fileNameSanitation(str): string {
-    //return str.replace(/\s+/g, '-').toLowerCase();
-    return `"${str}"`;
-}

@@ -4,7 +4,7 @@ import { jsConfig } from "./constants";
 import { appendJSConfig } from "./file-ops";
 import { installTypings } from "./typing-ops";
 import { EmberOperationResult, EmberOperation } from "./ember-ops";
-import { capitalizeFirstLetter, fileNameSanitation } from "./helpers";
+import { capitalizeFirstLetter } from "./helpers";
 import DumbCache from "./dumb-cache";
 
 export class EmberCliManager {
@@ -74,8 +74,6 @@ export class EmberCliManager {
             if (!result || result === "") {
                 return;
             };
-
-            result = fileNameSanitation(result);
 
             let newOp = new EmberOperation(["new", result]);
             newOp.run();
