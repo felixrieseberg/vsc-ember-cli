@@ -28,26 +28,26 @@ function execute(cmd?: string, arg?: Array<any>) {
     if (!emberManager) {
         emberManager = new embercli.EmberCliManager();
     }
+    if (!installed) {
+        installed = emberOps.isEmberCliInstalled();
+    }
 
     if (!cmd) {
         return;
     }
 
-    emberOps.isEmberCliInstalled()
-        .then(function () {
-            installed = true;
+    // Ensure Ember Cli is installed
+    if (!installed) {
+        return window.showErrorMessage('Ember Cli is not installed');
+    };
 
-            let ecmd = emberManager[cmd];
-            if (typeof ecmd === 'function') {
-                try {
-                    ecmd.apply(emberManager, arg);
-                } catch (e) {
-                    // Well, clearly we didn't call a function
-                    console.log(e);
-                }
-            }
-        })
-        .catch(function () {
-            return window.showErrorMessage('Ember Cli is not installed');
-        });
+    let ecmd = emberManager[cmd];
+    if (typeof ecmd === 'function') {
+        try {
+            ecmd.apply(emberManager, arg);
+        } catch (e) {
+            // Well, clearly we didn't call a function
+            console.log(e);
+        }
+    }
 }
