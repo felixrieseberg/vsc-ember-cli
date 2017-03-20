@@ -1,10 +1,11 @@
 import { window, workspace, OutputChannel } from "vscode";
 import * as cp from "child_process";
-import * as os from "os";
 import * as path from "path";
 
-import { capitalizeFirstLetter, semver } from "./helpers";
+import { capitalizeFirstLetter, semver, versionDumpParse } from "./helpers";
 import { getFullAppPath, getPathToEmberBin } from "./config";
+import { hasFile } from "./file-ops";
+import { spawn } from "cross-spawn";
 
 export interface EmberOperationResult {
     code: Number;
@@ -13,7 +14,6 @@ export interface EmberOperationResult {
 }
 
 export class EmberOperation {
-    private _spawn = cp.spawn;
     private _oc: OutputChannel;
     private _process: cp.ChildProcess;
     private _isOutputChannelVisible: boolean;
@@ -64,21 +64,10 @@ export class EmberOperation {
 
             this._oc = window.createOutputChannel(`Ember: ${capitalizeFirstLetter(this.cmd[0])}`);
 
-            // On Windows, we'll have to call Ember with PowerShell
-            // https://github.com/nodejs/node-v0.x-archive/issues/2318
-            if (os.platform() === "win32") {
-                let joinedArgs = this.cmd;
-                joinedArgs.unshift(emberPath);
+            this._process = spawn(emberPath, this.cmd, {
+                cwd: getFullAppPath()
+            });
 
-                this._process = this._spawn("powershell.exe", joinedArgs, {
-                    cwd: getFullAppPath(),
-                    stdio: ["ignore", "pipe", "pipe" ]
-                });
-            } else {
-                this._process = this._spawn(emberPath, this.cmd, {
-                    cwd: getFullAppPath()
-                });
-            }
             this._oc.appendLine("Building...");
 
             if (this._isOutputChannelVisible || debugEnabled) {
@@ -103,7 +92,7 @@ export class EmberOperation {
             });
 
             this._process.stderr.on("data", (data) => {
-				let out = data.toString();
+                let out = data.toString();
                 this._oc.appendLine(out);
                 this._stderr.push(out);
             });
@@ -120,7 +109,7 @@ export class EmberOperation {
         });
     }
 
-    constructor (cmd: string | Array<string>, options = { isOutputChannelVisible: true }) {
+    constructor(cmd: string | Array<string>, options = { isOutputChannelVisible: true }) {
         this._isOutputChannelVisible = options.isOutputChannelVisible;
         this.cmd = (Array.isArray(cmd)) ? cmd : [cmd];
         this.created = true;
@@ -137,50 +126,80 @@ export class EmberOperation {
 }
 
 export function isEmberCliInstalled(): boolean {
+    let test = getEmberVersionDump();
+    return test ? true : false;
+}
+
+/**
+ * Returns ember -v console dump
+ * 
+ * @returns {string} 
+ */
+function getEmberVersionDump(): string {
     let emberBin = getPathToEmberBin();
 
-    try {
-        let exec = cp.execSync(`${emberBin} -v`, {
-            cwd: getFullAppPath()
-        });
+    return spawn.sync(emberBin, ['-v']).output.toString();
+}
 
-        console.log("Ember is apparently installed");
-        console.log(exec.toString());
+var versionCache = false;
+/**
+ * Returns the versions from ember -v
+ * [0] = ember version
+ * [1] = node version
+ * [2] = os info
+ * 
+ * @returns {Array<string>} 
+ */
+function getVersionsFromDump(): Array<string> {
+    let matches;
 
-        return true;
-    } catch (e) {
-        debugger;
-
-        return false;
+    if (!versionCache) {
+        let versionDump = getEmberVersionDump();
+        matches = versionDumpParse().exec(versionDump);
+        matches.shift();
+        versionCache = matches;
     }
+    else {
+        matches = versionCache;
+    }
+
+    return matches;
 }
 
 export function getEmberVersion(): Promise<string> {
     return new Promise((resolve, reject) => {
-        let bower;
+        let bower, bowerPath;
 
         if (!workspace || !workspace.rootPath) {
             return reject(new Error("Could not determine Ember version: Workspace not available."));
         }
 
         // Try go require the bower.json
-        try {
-            bower = require(path.join(getFullAppPath(), "bower.json"));
-        } catch (error) {
-            return reject(new Error("Could not determine Ember version: Bower.json not found."));
-        }
-
-        // Attempt to get to the ember version
-        if (bower && bower.dependencies && bower.dependencies.ember) {
-            let version = semver().exec(bower.dependencies.ember);
-
-            if (version && version[0]) {
-                resolve(version[0]);
-            } else {
-                return reject(new Error("Could not determine Ember version: Ember version not recognized."));
+        bowerPath = path.join(getFullAppPath(), "bower.json");
+        if (hasFile(bowerPath)) {
+            try {
+                bower = require(bowerPath);
+            } catch (error) {
+                return reject(new Error("Could not determine Ember version: Bower.json not found."));
             }
-        } else {
-            return reject(new Error("Could not determine Ember version: Ember not a bower dependency."));
+
+            // Attempt to get to the ember version
+            if (bower && bower.dependencies && bower.dependencies.ember) {
+                let version = semver().exec(bower.dependencies.ember);
+
+                if (version && version[0]) {
+                    resolve(version[0]);
+                } else {
+                    return reject(new Error("Could not determine Ember version: Ember version not recognized."));
+                }
+            } else {
+                return reject(new Error("Could not determine Ember version: Ember not a bower dependency."));
+            }
+        }
+        // Get version from version dump
+        else {
+            let versions = getVersionsFromDump();
+            return resolve(versions[0]);
         }
     });
 }
@@ -218,7 +237,7 @@ function parseHelp(cmd: string, output: any): any {
 
     if (help && help.commands) {
         cmdHelp = help.commands.find((item) => {
-           return (item && item.name && item.name === cmd);
+            return (item && item.name && item.name === cmd);
         });
     }
 
