@@ -32,7 +32,7 @@ export function appendJSConfig(data, filepath = ""): boolean {
     // Write new config
     try {
         newJsc = mergedJsc || jsConfig;
-        fs.writeFileSync(jscPath, JSON.stringify(newJsc, null, " "), "utf8");
+        fs.writeFileSync(jscPath, JSON.stringify(newJsc, null, "  "), "utf8");
     } catch (e) {
         return false;
     }
