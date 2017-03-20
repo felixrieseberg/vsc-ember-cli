@@ -15,7 +15,13 @@ export function installTypings(): Promise<boolean> {
         }
 
         return getEmberVersion()
-            .then((version) => installTypingsForVersion(version));
+            .then((version) => {
+                return installTypingsForVersion(version);
+            })
+            .catch((e) => {
+                console.log(e);
+                debugger;
+            });
     });
 }
 

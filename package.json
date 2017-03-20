@@ -123,8 +123,10 @@
     "vscode": "^1.0.5"
   },
   "dependencies": {
+    "cross-spawn": "^5.1.0",
     "fs-extra": "^2.0.0",
     "merge": "^1.2.0",
-    "path-exists": "^3.0.0"
+    "path-exists": "^3.0.0",
+    "superspawn": "^0.1.0"
   }
 }

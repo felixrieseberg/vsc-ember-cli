@@ -6,6 +6,7 @@ import * as path from "path";
 import { capitalizeFirstLetter, semver, versionDumpParse } from "./helpers";
 import { getFullAppPath, getPathToEmberBin } from "./config";
 import { hasFile } from "./file-ops";
+import { spawn } from "superspawn";
 
 export interface EmberOperationResult {
     code: Number;
@@ -137,9 +138,14 @@ export class EmberOperation {
     }
 }
 
-export function isEmberCliInstalled(): boolean {
-    let test = getEmberVersionDump();
-    return test ? true : false;
+export function isEmberCliInstalled(): Promise<boolean> {
+    return getEmberVersionDump()
+        .then(function () {
+            return true;
+        })
+        .catch(function () {
+            return false;
+        });
 }
 
 /**
@@ -147,50 +153,36 @@ export function isEmberCliInstalled(): boolean {
  * 
  * @returns {string} 
  */
-function getEmberVersionDump(): string {
+function getEmberVersionDump(): Promise<string> {
     let emberBin = getPathToEmberBin();
 
-    try {
-        let exec = cp.execSync(`${emberBin} -v`, {
-            cwd: getFullAppPath()
-        });
-
-        let versionDump = exec.toString();
-
-        console.log("Ember is apparently installed");
-        console.log(versionDump);
-
-        return versionDump;
-    } catch (e) {
-        debugger;
-
-        return undefined;
-    }
+    return spawn(emberBin, ['-v']);
 }
 
-var versionCache = false;
+var versionCache;
 /**
  * Returns the versions from ember -v
  * [0] = ember version
  * [1] = node version
  * [2] = os info
  * 
- * @returns {Array<string>} 
+ * @returns {Promise<string>} 
  */
-function getVersionsFromDump(): Array<string> {
-    let matches;
-
+function getVersionsFromDump(): Promise<[string]> {
     if (!versionCache) {
-        let versionDump = getEmberVersionDump();
-        matches = versionDumpParse().exec(versionDump);
-        matches.shift();
-        versionCache = matches;
-    }
-    else {
-        matches = versionCache;
+        versionCache = getEmberVersionDump()
+            .then(function (versionDump) {
+                let matches;
+
+                matches = versionDumpParse().exec(versionDump);
+                matches.shift();
+                //versionCache = matches;
+
+                return matches;
+            });
     }
 
-    return matches;
+    return versionCache;
 }
 
 export function getEmberVersion(): Promise<string> {
@@ -225,8 +217,7 @@ export function getEmberVersion(): Promise<string> {
         }
         // Get version from version dump
         else {
-            let versions = getVersionsFromDump();
-            resolve(versions[0]);
+            return getVersionsFromDump();
         }
     });
 }
