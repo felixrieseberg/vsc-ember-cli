@@ -20,6 +20,14 @@ export function appendJSConfig(data): boolean {
 
     // Check first if a jsconfig.json exists
     if (pathExists.sync(jscPath)) {
+		let extensionConfig = workspace.getConfiguration('vsc-ember-cli');
+
+		// If the file exists, but the user has requested no update,
+		// go ahead and return now
+		if (!extensionConfig.updateJSConfig) {
+			return false;
+		}
+
         // Merge
         try {
             currentJsc = JSON.parse(fs.readFileSync(jscPath, "utf8"));
