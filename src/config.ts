@@ -16,6 +16,7 @@ export function readSetting(key: string): any {
     }
 }
 
+// Unused?
 export function writeSetting(data) {
     let currentConfig, mergedConfig, newConfig;
     // Check first if a jsconfig.json exists
@@ -32,7 +33,7 @@ export function writeSetting(data) {
     // Write new config
     try {
         newConfig = mergedConfig || data;
-        fs.writeFileSync(configPath, JSON.stringify(newConfig), "utf8");
+        fs.writeFileSync(configPath, JSON.stringify(newConfig, null, "  "), "utf8");
         return true;
     } catch (e) {
         return false;

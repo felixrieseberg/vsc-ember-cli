@@ -10,12 +10,12 @@ const pathExists = require("path-exists");
 const merge = require("merge");
 
 // Merges or overwrites settings in jsconfig.json
-export function appendJSConfig(data): boolean {
+export function appendJSConfig(data, filepath = ""): boolean {
     if (!workspace || !workspace.rootPath) {
         return false;
     }
 
-    let jscPath = path.join(getFullAppPath(), "jsconfig.json");
+    let jscPath = path.join(getFullAppPath(), filepath, "jsconfig.json");
     let newJsc, mergedJsc, currentJsc;
 
     // Check first if a jsconfig.json exists
@@ -40,7 +40,7 @@ export function appendJSConfig(data): boolean {
     // Write new config
     try {
         newJsc = mergedJsc || jsConfig;
-        fs.writeFileSync(jscPath, JSON.stringify(newJsc), "utf8");
+        fs.writeFileSync(jscPath, JSON.stringify(newJsc, null, "  "), "utf8");
     } catch (e) {
         return false;
     }

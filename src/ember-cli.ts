@@ -35,7 +35,7 @@ export class EmberCliManager {
                 } else {
                     window.showErrorMessage("Addon folder structure creation failed.");
                 }
-        });
+            });
     }
 
     // ember version
@@ -76,8 +76,12 @@ export class EmberCliManager {
             };
 
             let newOp = new EmberOperation(["new", result]);
-            newOp.run();
-            this.setupProject();
+            newOp.run()
+                .then(() => {
+                    this.setupProject(result);
+                    // Todo: open new folder up in vscode as root;;; Maybe?
+                    // commands.executeCommand('vscode.openFolder', `./${result}`, false);
+                });
         });
     }
 
@@ -190,7 +194,7 @@ export class EmberCliManager {
                     let name = result.anonymousOptions[i];
 
                     optionPromises.push(window.showInputBox({
-                        prompt: `${capitalizeFirstLetter(name) }?`
+                        prompt: `${capitalizeFirstLetter(name)}?`
                     }).then((promptResult) => {
                         optionResults.push(promptResult);
                         gdName = (i === 1) ? promptResult : gdName;
@@ -273,23 +277,15 @@ export class EmberCliManager {
     // Helper Functions
     */
 
-    // Is the current project setup for Visual Studio Code?
-    public isProjectSetup(): boolean {
-        return false;
-    }
-
-    // Is the current project an Ember Cli project?
-    public isProjectEmberCli(): boolean {
-        return true;
-    }
-
     // Set the project up
-    public setupProject(): boolean {
+    public setupProject(path?: string): boolean {
         if (!workspace || !workspace.rootPath) {
             return false;
         }
 
-        appendJSConfig(jsConfig);
-        installTypings();
+        console.log("Setting Up Project");
+
+        appendJSConfig(jsConfig, path);
+        installTypings(path);
     }
 }
