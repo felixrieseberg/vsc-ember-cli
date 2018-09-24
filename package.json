@@ -47,6 +47,17 @@
   },
   "main": "./out/extension",
   "contributes": {
+    "configuration": {
+        "id": "vsc-ember-cli",
+        "title": "Ember CLI",
+        "properties": {
+          "vsc-ember-cli.updateJSConfig": {
+            "type": "boolean",
+            "default": true,
+            "description": "Update jsconfig.json if found in project."
+          }
+        }
+    },
     "snippets": [
       {
         "language": "handlebars",
