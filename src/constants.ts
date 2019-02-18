@@ -1,7 +1,8 @@
 export const jsConfig = {
     "compilerOptions": {
         "target": "es6",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+		"moduleResolution": "node"
     },
     "exclude": [
         "node_modules",
