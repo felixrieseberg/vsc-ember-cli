@@ -149,8 +149,6 @@ export function isEmberCliInstalled(): boolean {
 
         return true;
     } catch (e) {
-        debugger;
-
         return false;
     }
 }
